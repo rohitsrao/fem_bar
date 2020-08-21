@@ -25,8 +25,19 @@ class Material():
 #Creating a class for a node
 class Node():
 
+    #Defining a counter as class variable
+    #Keeps count of number of nodes created
+    #Counter value serves as node id
+    node_count = 0
+
     #Initializer
     def __init__(self, x, y):
+
+        #Incrementing node counter
+        node_count += 1
+
+        #Setting node id
+        self.id = node_count
 
         #Defining the coordinates of the node
         #Typecasting them to float to be sure
