@@ -37,7 +37,7 @@ class Node():
         Node.count += 1
 
         #Setting node id
-        self.id = count
+        self.id = Node.count
 
         #Defining the coordinates of the node
         #Typecasting them to float to be sure
