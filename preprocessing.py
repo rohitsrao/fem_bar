@@ -10,5 +10,6 @@ class Material():
         self.name = name
 
         #Setting the Young's Modulus of the material
-        self.E = E
+        #typecasts user value for E into float
+        self.E = float(E)
 
