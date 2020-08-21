@@ -30,6 +30,10 @@ class Node():
     #Counter value serves as node id
     count = 0
 
+    #Creating a dictionary to store created nodes
+    #keys are the node ids
+    ndict = {}
+
     #Initializer
     def __init__(self, x, y):
 
@@ -43,3 +47,18 @@ class Node():
         #Typecasting them to float to be sure
         self.x = float(x)
         self.y = float(y)
+
+        #Adding the created node to ndict
+        Node.ndict[self.id] = self
+
+    #Program to display all nodes
+    @classmethod
+    def display_nodes(cls):
+
+        print('Node ID   X   Y')
+        for n in cls.ndict:
+            line = str(n) + str(cls.ndict[n].x) + str(cls.ndict[n].y)
+            print(line)
+
+    #Must format the output of the nodes in a proper string column
+
