@@ -22,4 +22,13 @@ class Material():
         #typecasts user value for E into float
         self.E = float(E)
 
+#Creating a class for a node
+class Node():
 
+    #Initializer
+    def __init__(self, x, y):
+
+        #Defining the coordinates of the node
+        #Typecasting them to float to be sure
+        self.x = float(x)
+        self.y = float(y)
