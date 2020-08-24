@@ -1,6 +1,6 @@
 #This contains all classes required for preprocessing.
 
-#Creating a class for Bar
+#Class for Bar
 class Bar():
 
     #Initializer
@@ -9,7 +9,25 @@ class Bar():
         #Setting the material of the bar
         self.mat = mat
 
-#Creating a class for material
+#Class for Degree of Freedom
+class DOF():
+
+    #Creating a class variable to count number of DOF objects created
+    #Also serves as DOF id
+    count = 0
+
+    def __init__(self):
+
+        #Incrementing DOF object counter
+        DOF.count += 1
+
+        #Setting DOF id
+        self.id = DOF.count
+
+        #Initialising a degree of freedom in x-direction
+        self.u = 0.0
+
+#Class for material
 class Material():
 
     #Initializer
@@ -22,7 +40,7 @@ class Material():
         #typecasts user value for E into float
         self.E = float(E)
 
-#Creating a class for a node
+#Class for a node
 class Node():
 
     #Defining a counter as class variable
