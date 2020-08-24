@@ -25,7 +25,7 @@ class DOF():
         self.id = DOF.count
 
         #Initialising a degree of freedom in x-direction
-        self.val = 0.0
+        self.val = None
 
 #Class for material
 class Material():
@@ -40,7 +40,7 @@ class Material():
         #typecasts user value for E into float
         self.E = float(E)
 
-#Class for a node
+#Class for a Node
 class Node():
 
     #Defining a counter as class variable
