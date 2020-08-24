@@ -25,7 +25,7 @@ class DOF():
         self.id = DOF.count
 
         #Initialising a degree of freedom in x-direction
-        self.u = 0.0
+        self.val = 0.0
 
 #Class for material
 class Material():
@@ -52,6 +52,10 @@ class Node():
     #keys are the node ids
     ndict = {}
 
+    #Setting class variables needed for display_nodes method
+    col_width = 7
+    col_pad = 3
+
     #Initializer
     def __init__(self, x, y):
 
@@ -66,6 +70,9 @@ class Node():
         self.x = float(x)
         self.y = float(y)
 
+        #Initializing a degree of freedom for this node
+        self.u = DOF()
+
         #Adding the created node to ndict
         Node.ndict[self.id] = self
 
@@ -73,10 +80,24 @@ class Node():
     @classmethod
     def display_nodes(cls):
 
-        print('Node ID   X   Y')
-        for n in cls.ndict:
-            line = str(n) + str(cls.ndict[n].x) + str(cls.ndict[n].y)
-            print(line)
+        #Computing total cell length - width + padding
+        cell_width = Node.col_width + Node.col_pad
 
-    #Must format the output of the nodes in a proper string column
+        #Column names
+        col_names = ['Node ID', 'X', 'Y', 'u']
+        print(''.join(name.ljust(cell_width) for name in col_names))
+
+        #Horizontal line below column name
+        hl = '-'*Node.col_width
+        print(''.join(hl.ljust(cell_width) for name in col_names))
+
+        #Looping through each created node
+        for n in cls.ndict:
+
+            #Creating a row of the output table
+            row = [str(n)]
+            row.append(str(cls.ndict[n].x))
+            row.append(str(cls.ndict[n].y))
+            row.append(str(cls.ndict[n].u.val))
+            print(''.join(cell.ljust(cell_width) for cell in row))
 
