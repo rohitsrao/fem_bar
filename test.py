@@ -36,3 +36,5 @@ Node.display_nodes()
 
 #Creating an element
 Element(n1, n2)
+
+Element.display_elements()

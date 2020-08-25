@@ -41,6 +41,37 @@ class Element():
         #Adding the created element to the edict dictionary
         Element.edict[self.id] = self
 
+    @classmethod
+    def display_elements(cls):
+
+        #Defining column widths and padding
+        col_width = 7
+        col_pad = 3
+
+        #Computing total cell length - width + padding
+        cell_width = col_width + col_pad
+
+        #Column names
+        col_names = ['Elem ID', 'n1', 'n2']
+        print(''.join(name.ljust(cell_width) for name in col_names))
+
+        #Horizontal line below column name
+        hl = '-'*col_width
+        print(''.join(hl.ljust(cell_width) for name in col_names))
+
+        #Looping through each created node
+        for e in cls.edict:
+
+            #Creating a row of the output table
+            row = [str(e)]
+            row.append(str(cls.edict[e].n[0].id))
+            row.append(str(cls.edict[e].n[1].id))
+            print(''.join(cell.ljust(cell_width) for cell in row))
+        
+        #Final print to create space
+        print()
+
+
 
 #Class for material
 class Material():
