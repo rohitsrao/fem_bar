@@ -105,7 +105,8 @@ class Element():
         for e in cls.edict.values():
 
             #Creating a row of the output table
-            row = [str(e.id)]
+            row = []
+            row.append(str(e.id))
             row.append(str(e.n[0].id))
             row.append(str(e.n[1].id))
             row.append(e.mat.name)
@@ -230,7 +231,8 @@ class Node():
         for n in cls.ndict.values():
 
             #Creating a row of the output table
-            row = [str(n.id)]
+            row = []
+            row.append(str(n.id))
             row.append(str(n.x))
             row.append(str(n.y))
             row.append(str(n.ux))
