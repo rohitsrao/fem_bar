@@ -94,20 +94,21 @@ class Element():
         cell_width = col_width + col_pad
 
         #Column names
-        col_names = ['Elem ID', 'n1', 'n2']
+        col_names = ['Elem ID', 'n1', 'n2', 'mat']
         print(''.join(name.ljust(cell_width) for name in col_names))
 
         #Horizontal line below column name
         hl = '-'*col_width
         print(''.join(hl.ljust(cell_width) for name in col_names))
 
-        #Looping through each created node
-        for e in cls.edict:
+        #Looping through each created element
+        for e in cls.edict.values():
 
             #Creating a row of the output table
-            row = [str(e)]
-            row.append(str(cls.edict[e].n[0].id))
-            row.append(str(cls.edict[e].n[1].id))
+            row = [str(e.id)]
+            row.append(str(e.n[0].id))
+            row.append(str(e.n[1].id))
+            row.append(e.mat.name)
             print(''.join(cell.ljust(cell_width) for cell in row))
         
         #Final print to create space
