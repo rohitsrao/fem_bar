@@ -1,5 +1,8 @@
 #This contains all classes required for preprocessing.
 
+#Libraries
+import pandas as pd
+
 #Class for Bar
 class Bar():
 
@@ -25,7 +28,10 @@ class DOF():
         self.id = DOF.count
 
         #Initialising a degree of freedom in x-direction
-        self.val = None
+        self.x_val = None
+
+        #Initialising a degree of freedom in y-direction
+        self.y_val = None
 
 #Class for material
 class Material():
@@ -76,6 +82,38 @@ class Node():
         #Adding the created node to ndict
         Node.ndict[self.id] = self
 
+    #Alternative initializer to create nodes from csv
+    @classmethod
+    def create_nodes_from_csv(cls, f):
+
+        '''
+        This method acts as an alternative initializer for the Node class
+        and provides a way to create multiple node objects from 
+        coordinate data of nodes from a csv
+
+        Inputs:
+        f - string - path to csv file
+
+        Note:
+        csv file should have columns x, y
+        '''
+
+        #Creating a dataframe from the imported data from csv
+        df = pd.read_csv(f)
+
+        #Compute the number of rows in dataframe
+        num_rows = df.shape[0]
+
+        #Loop through the rows
+        for i in range(num_rows):
+
+            #Extract the coordinate from a single row
+            x = df.iloc[i]['x']
+            y = df.iloc[i]['y']
+
+            #Create node by calling initializer
+            cls(x, y)
+
     #Program to display all nodes
     @classmethod
     def display_nodes(cls):
@@ -84,7 +122,7 @@ class Node():
         cell_width = Node.col_width + Node.col_pad
 
         #Column names
-        col_names = ['Node ID', 'X', 'Y', 'u']
+        col_names = ['Node ID', 'X', 'Y', 'ux', 'uy']
         print(''.join(name.ljust(cell_width) for name in col_names))
 
         #Horizontal line below column name
@@ -98,6 +136,10 @@ class Node():
             row = [str(n)]
             row.append(str(cls.ndict[n].x))
             row.append(str(cls.ndict[n].y))
-            row.append(str(cls.ndict[n].u.val))
+            row.append(str(cls.ndict[n].u.x_val))
+            row.append(str(cls.ndict[n].u.y_val))
             print(''.join(cell.ljust(cell_width) for cell in row))
+        
+        #Final print to create space
+        print()
 
