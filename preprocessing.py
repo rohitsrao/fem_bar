@@ -88,10 +88,13 @@ class Element():
         del df
 
     @classmethod
-    def define_symbolic_variables(cls):
+    def stiffness_integrand_generator(cls):
 
         #Natural Coordinate
         cls.xi = sp.symbols('xi')
+
+        #Field Variable
+        cls.u = sp.symbols('u')
 
         #Material and geometry
         cls.E = sp.symbols('E')
