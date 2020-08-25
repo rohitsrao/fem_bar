@@ -120,8 +120,12 @@ class Element():
         #Computing total cell length - width + padding
         cell_width = col_width + col_pad
 
+        #Printing note
+        print('Angles are measured counter clockwise at first node in an element')
+        print()
+
         #Column names
-        col_names = ['Elem ID', 'mat', 'n1', 'n2']
+        col_names = ['Elem ID', 'mat', 'n1', 'n2', 'len', 'deg']
         print(''.join(name.ljust(cell_width) for name in col_names))
 
         #Horizontal line below column name
@@ -137,6 +141,8 @@ class Element():
             row.append(e.mat.name)
             row.append(str(e.n[0].id))
             row.append(str(e.n[1].id))
+            row.append(str(e.l))
+            row.append(str(e.theta_deg))
             print(''.join(cell.ljust(cell_width) for cell in row))
         
         #Final print to create space
