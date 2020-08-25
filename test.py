@@ -35,4 +35,4 @@ Element.create_elements_from_csv(f)
 Element.set_material(mat1)
 Element.display_elements()
 
-Element.define_symbolic_variables()
+Element.stiffness_integrand_generator()

@@ -5,6 +5,8 @@ import numpy as np
 import pandas as pd
 import sympy as sp
 
+from sympy.solvers.solveset import linsolve
+
 #Class for Bar Element
 class Element():
 
@@ -93,9 +95,6 @@ class Element():
         #Natural Coordinate
         cls.xi = sp.symbols('xi')
 
-        #Field Variable
-        cls.u = sp.symbols('u')
-
         #Material and geometry
         cls.E = sp.symbols('E')
         cls.L = sp.symbols('L')
@@ -104,6 +103,63 @@ class Element():
         #Degrees of freedom of bar element
         cls.u1 = sp.symbols('u1')
         cls.u2 = sp.symbols('u2')
+
+        #Defining Jacobian Matrix
+        cls.J = sp.Matrix([[0.5*cls.L]])
+
+        #Field Variable
+        u = sp.symbols('u')
+
+        #Defining coefficients for linear interpolation
+        alpha0, alpha1 = sp.symbols(['alpha_0', 'alpha_1'])
+
+        #Defining linear interpolation function
+        u = alpha0 + alpha1*cls.xi
+
+        #Substituting the values for xi at the nodes
+        #Node1
+        u1e = sp.Eq(cls.u1, u.subs(cls.xi, -1))
+        #Node2
+        u2e = sp.Eq(cls.u2, u.subs(cls.xi, 1))
+
+        #Solving for the coefficients in terms of the nodal values of the
+        #degrees of freedom using sp.solvers.solveset.linsolve. Returns a 
+        #finite set. 
+        res = linsolve([u1e, u2e], alpha0, alpha1)
+
+        #Extracting the values of the Sympy FiniteSet into the variables
+        #The elements the FiniteSet can be accessed via .args(index)
+        #which gives a tuple containing sympy tuple
+        alpha0_s = res.args[0][0]
+        alpha1_s = res.args[0][1]
+
+        #Substitute the coefficients back into the equation for the field variable
+        u = u.subs([(alpha0, alpha0_s), (alpha1, alpha1_s)])
+
+        #Group the terms of the nodal degrees of freedom
+        u = sp.collect(sp.expand(u), [cls.u1, cls.u2])
+
+        #Collecting the shape functions into separate variables
+        N1 = u.coeff(cls.u1)
+        N2 = u.coeff(cls.u2)
+
+        #Defining the shape function matrix
+        cls.N = sp.Matrix([[N1, N2]])
+
+        #Defining the onezero matrix
+        onezero = sp.Matrix([[1]])
+
+        #Defining Gamma Matrix - inverse Jacobian
+        gamma = cls.J.inv()
+
+        #Defining DN Matrix
+        DN = sp.diff(cls.N, cls.xi)
+
+        #Computing the transformed strain displacement matrix Bt
+        cls.Bt = onezero*gamma*DN
+
+        #Defining the integrand
+        cls.integrand = cls.E*cls.A*(cls.Bt.T*cls.Bt)*cls.J.det()
 
     @classmethod
     def display_elements(cls):
