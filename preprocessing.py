@@ -1,6 +1,7 @@
 #This contains all classes required for preprocessing.
 
 #Libraries
+import numpy as np
 import pandas as pd
 
 #Class for Bar Element
@@ -43,6 +44,32 @@ class Element():
 
         #Adding the created element to the edict dictionary
         Element.edict[self.id] = self
+
+        #Computing element geometry
+        self.compute_geometry()
+
+    def compute_geometry(self):
+        '''
+        Method to compute the length and angle of the element
+        '''
+
+        #Extracting the coordinates
+        #Node 1
+        x1 = self.n[0].x
+        y1 = self.n[0].y
+        #Node 2
+        x2 = self.n[1].x
+        y2 = self.n[1].y
+
+        #Computing length
+        self.l = np.sqrt((x2-x1)**2 + (y2-y1)**2)
+
+        #Computing the angle
+        m = (y2-y1)/(x2-x1)
+        self.theta = np.arctan(m)
+
+        #Converting angle to degrees for display
+        self.theta_deg = np.degrees(self.theta)
 
     #Alternative initializer to create nodes from csv
     @classmethod
