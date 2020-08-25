@@ -25,6 +25,14 @@ print('Young\'s Modulus: {}MPa'.format(cm.E))
 print()
 
 #Creating nodes from csv
-f = './nodes.csv'
-Node.create_nodes_from_csv(f)
+#f = './nodes.csv'
+#Node.create_nodes_from_csv(f)
+#Node.display_nodes()
+
+#Creating two nodes
+n1 = Node(0, 0)
+n2 = Node(7, 0)
 Node.display_nodes()
+
+#Creating an element
+Element(n1, n2)

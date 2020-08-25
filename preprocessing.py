@@ -3,35 +3,44 @@
 #Libraries
 import pandas as pd
 
-#Class for Bar
-class Bar():
+#Class for Bar Element
+class Element():
 
-    #Initializer
-    def __init__(self, mat):
-
-        #Setting the material of the bar
-        self.mat = mat
-
-#Class for Degree of Freedom
-class DOF():
-
-    #Creating a class variable to count number of DOF objects created
-    #Also serves as DOF id
+    #Defining a counter as class variable
+    #Keeps count of number of elements created
+    #Counter serves as element id
     count = 0
 
-    def __init__(self):
+    #Creating a dictionary to store created elements
+    edict = {}    
 
-        #Incrementing DOF object counter
-        DOF.count += 1
+    #Initializer
+    def __init__(self, n1, n2):
 
-        #Setting DOF id
-        self.id = DOF.count
+        '''
+        Create a bar element between two nodes n1 and n2
 
-        #Initialising a degree of freedom in x-direction
-        self.x_val = None
+        Inputs - 
+        n1 - Node - first node of the element
+        n2 - Node - second node of the element
+        '''
 
-        #Initialising a degree of freedom in y-direction
-        self.y_val = None
+        #Incrementing counter
+        Element.count += 1
+
+        #Setting element id
+        self.id = Element.count
+
+        #Creating a dictionary to store nodes belonging to an element
+        self.n = {}
+
+        #Adding node objects to the dictionary
+        self.n[0] = n1
+        self.n[1] = n2
+
+        #Adding the created element to the edict dictionary
+        Element.edict[self.id] = self
+
 
 #Class for material
 class Material():
@@ -76,8 +85,9 @@ class Node():
         self.x = float(x)
         self.y = float(y)
 
-        #Initializing a degree of freedom for this node
-        self.u = DOF()
+        #Initializing degrees of freedom for this node
+        self.ux = None
+        self.uy = None
 
         #Adding the created node to ndict
         Node.ndict[self.id] = self
@@ -136,8 +146,8 @@ class Node():
             row = [str(n)]
             row.append(str(cls.ndict[n].x))
             row.append(str(cls.ndict[n].y))
-            row.append(str(cls.ndict[n].u.x_val))
-            row.append(str(cls.ndict[n].u.y_val))
+            row.append(str(cls.ndict[n].ux))
+            row.append(str(cls.ndict[n].uy))
             print(''.join(cell.ljust(cell_width) for cell in row))
         
         #Final print to create space
