@@ -149,6 +149,9 @@ class Node():
             #Create node by calling initializer
             cls(x, y)
 
+        #Deleting dataframe after nodes have been created
+        del df
+
     #Program to display all nodes
     @classmethod
     def display_nodes(cls):
