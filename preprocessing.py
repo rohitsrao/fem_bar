@@ -66,7 +66,7 @@ class Element():
         #Loop through the rows
         for i in range(num_rows):
 
-            #Extract the coordinate from a single row
+            #Extract the node ids from a single row
             n1_id = df.iloc[i]['n1']
             n2_id = df.iloc[i]['n2']
 
@@ -77,7 +77,7 @@ class Element():
             #Create node by calling initializer
             cls(n1, n2)
 
-        #Deleting dataframe after nodes have been created
+        #Deleting dataframe after elements have been created
         del df
 
     @classmethod
