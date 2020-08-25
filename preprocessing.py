@@ -258,7 +258,6 @@ class Element():
         #Need to provide a start argument for the sum as symbolic matrix of zeros
         integral = sum(gauss_integrals, sp.Matrix(np.zeros(shape=integrand.shape)))
 
-        print(integral)
         return integral
 
 #Class for material
