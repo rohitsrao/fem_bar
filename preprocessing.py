@@ -41,6 +41,45 @@ class Element():
         #Adding the created element to the edict dictionary
         Element.edict[self.id] = self
 
+    #Alternative initializer to create nodes from csv
+    @classmethod
+    def create_elements_from_csv(cls, f):
+
+        '''
+        This method acts as an alternative initializer for the Element class
+        and provides a way to create multiple Element objects from nodal list
+        in a csv
+
+        Inputs:
+        f - string - path to csv file
+
+        Note:
+        csv file should have columns n1, n2 for node ids
+        '''
+
+        #Creating a dataframe from the imported data from csv
+        df = pd.read_csv(f)
+
+        #Compute the number of rows in dataframe
+        num_rows = df.shape[0]
+
+        #Loop through the rows
+        for i in range(num_rows):
+
+            #Extract the coordinate from a single row
+            n1_id = df.iloc[i]['n1']
+            n2_id = df.iloc[i]['n2']
+
+            #Extracting the node objects corresponding to node ids
+            n1 = Node.ndict[n1_id]
+            n2 = Node.ndict[n2_id]
+
+            #Create node by calling initializer
+            cls(n1, n2)
+
+        #Deleting dataframe after nodes have been created
+        del df
+
     @classmethod
     def display_elements(cls):
 
