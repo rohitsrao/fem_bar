@@ -71,8 +71,6 @@ class Element():
         #Final print to create space
         print()
 
-
-
 #Class for material
 class Material():
 
@@ -97,10 +95,6 @@ class Node():
     #Creating a dictionary to store created nodes
     #keys are the node ids
     ndict = {}
-
-    #Setting class variables needed for display_nodes method
-    col_width = 7
-    col_pad = 3
 
     #Initializer
     def __init__(self, x, y):
@@ -159,15 +153,19 @@ class Node():
     @classmethod
     def display_nodes(cls):
 
+        #Setting column width and padding
+        col_width = 7
+        col_pad = 3
+
         #Computing total cell length - width + padding
-        cell_width = Node.col_width + Node.col_pad
+        cell_width = col_width + col_pad
 
         #Column names
         col_names = ['Node ID', 'X', 'Y', 'ux', 'uy']
         print(''.join(name.ljust(cell_width) for name in col_names))
 
         #Horizontal line below column name
-        hl = '-'*Node.col_width
+        hl = '-'*col_width
         print(''.join(hl.ljust(cell_width) for name in col_names))
 
         #Looping through each created node
