@@ -18,10 +18,10 @@ import pandas as pd
 from preprocessing import *
 
 #Creating a material
-cm = Material(name='customMat', E=50000)
+mat1 = Material(name='mat1', E=50000)
 
-print('Material {} has been created successfully'.format(cm.name))
-print('Young\'s Modulus: {}MPa'.format(cm.E))
+print('Material {} has been created successfully'.format(mat1.name))
+print('Young\'s Modulus: {}MPa'.format(mat1.E))
 print()
 
 #Creating nodes from csv
@@ -32,4 +32,7 @@ Node.display_nodes()
 #Creating elements from csv
 f = './elements.csv'
 Element.create_elements_from_csv(f)
+Element.set_material(mat1)
 Element.display_elements()
+
+Element.define_symbolic_variables()

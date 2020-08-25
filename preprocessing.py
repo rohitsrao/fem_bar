@@ -3,6 +3,7 @@
 #Libraries
 import numpy as np
 import pandas as pd
+import sympy as sp
 
 #Class for Bar Element
 class Element():
@@ -48,30 +49,6 @@ class Element():
         #Computing element geometry
         self.compute_geometry()
 
-    def compute_geometry(self):
-        '''
-        Method to compute the length and angle of the element
-        '''
-
-        #Extracting the coordinates
-        #Node 1
-        x1 = self.n[0].x
-        y1 = self.n[0].y
-        #Node 2
-        x2 = self.n[1].x
-        y2 = self.n[1].y
-
-        #Computing length
-        self.l = np.sqrt((x2-x1)**2 + (y2-y1)**2)
-
-        #Computing the angle
-        m = (y2-y1)/(x2-x1)
-        self.theta = np.arctan(m)
-
-        #Converting angle to degrees for display
-        self.theta_deg = np.degrees(self.theta)
-
-    #Alternative initializer to create nodes from csv
     @classmethod
     def create_elements_from_csv(cls, f):
 
@@ -109,6 +86,21 @@ class Element():
 
         #Deleting dataframe after elements have been created
         del df
+
+    @classmethod
+    def define_symbolic_variables(cls):
+
+        #Natural Coordinate
+        cls.xi = sp.symbols('xi')
+
+        #Material and geometry
+        cls.E = sp.symbols('E')
+        cls.L = sp.symbols('L')
+        cls.A = sp.symbols('A')
+
+        #Degrees of freedom of bar element
+        cls.u1 = sp.symbols('u1')
+        cls.u2 = sp.symbols('u2')
 
     @classmethod
     def display_elements(cls):
@@ -159,6 +151,29 @@ class Element():
         #Looping through all the elements and setting material
         for e in cls.edict.values():
             e.mat = mat
+
+    def compute_geometry(self):
+        '''
+        Method to compute the length and angle of the element
+        '''
+
+        #Extracting the coordinates
+        #Node 1
+        x1 = self.n[0].x
+        y1 = self.n[0].y
+        #Node 2
+        x2 = self.n[1].x
+        y2 = self.n[1].y
+
+        #Computing length
+        self.l = np.sqrt((x2-x1)**2 + (y2-y1)**2)
+
+        #Computing the angle
+        m = (y2-y1)/(x2-x1)
+        self.theta = np.arctan(m)
+
+        #Converting angle to degrees for display
+        self.theta_deg = np.degrees(self.theta)
 
 #Class for material
 class Material():
