@@ -31,6 +31,9 @@ class Element():
         #Setting element id
         self.id = Element.count
 
+        #Creating a placeholder for material
+        self.mat = None
+
         #Creating a dictionary to store nodes belonging to an element
         self.n = {}
 
@@ -109,6 +112,18 @@ class Element():
         
         #Final print to create space
         print()
+
+    @classmethod
+    def set_material(cls, mat):
+        '''
+        Sets the material for every single element created
+
+        Inputs - Material - material object
+        '''
+
+        #Looping through all the elements and setting material
+        for e in cls.edict.values():
+            e.mat = mat
 
 #Class for material
 class Material():
