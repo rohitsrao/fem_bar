@@ -135,7 +135,7 @@ class Material():
         #Setting name of the material
         self.name = name
 
-        #Setting the Young's Modulus of the material
+        #Setting the Young's Modulus of the mateelement
         #typecasts user value for E into float
         self.E = float(E)
 
@@ -227,14 +227,14 @@ class Node():
         print(''.join(hl.ljust(cell_width) for name in col_names))
 
         #Looping through each created node
-        for n in cls.ndict:
+        for n in cls.ndict.values():
 
             #Creating a row of the output table
-            row = [str(n)]
-            row.append(str(cls.ndict[n].x))
-            row.append(str(cls.ndict[n].y))
-            row.append(str(cls.ndict[n].ux))
-            row.append(str(cls.ndict[n].uy))
+            row = [str(n.id)]
+            row.append(str(n.x))
+            row.append(str(n.y))
+            row.append(str(n.ux))
+            row.append(str(n.uy))
             print(''.join(cell.ljust(cell_width) for cell in row))
         
         #Final print to create space
