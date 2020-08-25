@@ -94,7 +94,7 @@ class Element():
         cell_width = col_width + col_pad
 
         #Column names
-        col_names = ['Elem ID', 'n1', 'n2', 'mat']
+        col_names = ['Elem ID', 'mat', 'n1', 'n2']
         print(''.join(name.ljust(cell_width) for name in col_names))
 
         #Horizontal line below column name
@@ -107,9 +107,9 @@ class Element():
             #Creating a row of the output table
             row = []
             row.append(str(e.id))
+            row.append(e.mat.name)
             row.append(str(e.n[0].id))
             row.append(str(e.n[1].id))
-            row.append(e.mat.name)
             print(''.join(cell.ljust(cell_width) for cell in row))
         
         #Final print to create space
