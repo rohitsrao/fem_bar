@@ -51,6 +51,10 @@ class Element():
         #Computing element geometry
         self.compute_geometry()
 
+        #Defining weights and points for gauss integration
+        self.gp = [0]
+        self.w = [2]
+
     @classmethod
     def create_elements_from_csv(cls, f):
 
@@ -233,6 +237,29 @@ class Element():
 
         #Converting angle to degrees for display
         self.theta_deg = np.degrees(self.theta)
+
+    def gauss_integrator(self, integrand):
+        '''
+        Performs gauss integration on integrand
+        integrand must be a symbolic expression in xi (symbolic)
+        '''
+
+        #Defining a list to store the gauss integrals
+        gauss_integrals = []
+
+        #Looping through number of gauss points
+        for i in range(len(self.gp)):
+
+            sub_list = [(Element.xi, self.gp[i])]
+            gauss_integral = self.w[i]*integrand.subs(sub_list)
+            gauss_integrals.append(gauss_integral)
+
+        #Calculating total integrand
+        #Need to provide a start argument for the sum as symbolic matrix of zeros
+        integral = sum(gauss_integrals, sp.Matrix(np.zeros(shape=integrand.shape)))
+
+        print(integral)
+        return integral
 
 #Class for material
 class Material():

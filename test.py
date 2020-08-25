@@ -36,3 +36,6 @@ Element.set_material(mat1)
 Element.display_elements()
 
 Element.stiffness_integrand_generator()
+
+e = Element.edict[1]
+e.gauss_integrator(Element.integrand)
