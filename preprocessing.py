@@ -584,8 +584,6 @@ class Node():
         '''
         self.loads[comp].value = float(value)
 
-
-
 #Class for Truss
 class Truss():
 
@@ -649,3 +647,6 @@ class Truss():
             value = df.iloc[i]['value']
 
             self.ndict[n_id].apply_load(comp, value)
+
+        #Deleting dataframe
+        del df
