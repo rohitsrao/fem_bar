@@ -19,7 +19,7 @@ class Element():
     edict = {}    
 
     #Initializer
-    def __init__(self, n1, n2):
+    def __init__(self, n1, n2, A):
 
         '''
         Create a bar element between two nodes n1 and n2
@@ -37,6 +37,9 @@ class Element():
 
         #Creating a placeholder for material
         self.mat = None
+
+        #Setting the area of the element
+        self.A = A
 
         #Creating a dictionary to store nodes belonging to an element
         self.n = {}
@@ -82,13 +85,16 @@ class Element():
             #Extract the node ids from a single row
             n1_id = df.iloc[i]['n1']
             n2_id = df.iloc[i]['n2']
+            
+            #Extracing the area from the row
+            A = df.iloc[i]['A']
 
             #Extracting the node objects corresponding to node ids
             n1 = Node.ndict[n1_id]
             n2 = Node.ndict[n2_id]
 
             #Create node by calling initializer
-            cls(n1, n2)
+            cls(n1, n2, A)
 
         #Deleting dataframe after elements have been created
         del df
