@@ -43,3 +43,7 @@ Element.display_elements()
 truss = Truss()
 truss.assemble()
 
+#Apply loads from csv
+f = './loads.csv'
+truss.apply_loads_from_csv(f)
+Node.display_nodes()
