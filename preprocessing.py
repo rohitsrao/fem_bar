@@ -47,6 +47,9 @@ class Element():
     #Creating a dictionary to store created elements
     edict = {}    
 
+    #Defining number of dofs in element
+    num_dofs = 4
+
     #Initializer
     def __init__(self, n1, n2, A):
 
@@ -326,6 +329,29 @@ class Element():
         integral = sum(gauss_integrals, sp.Matrix(np.zeros(shape=integrand.shape)))
 
         return integral
+
+    def generate_global_indices(self):
+        '''
+        This method generates a matrix of tuples which is the same size
+        as the local 2d stiffness matrix. Each tuple correponds to the row,col
+        in the global stiffness matrix where the corresponding term of the stiffness matrix
+        goes
+        '''
+
+        #Creating a list to store the indices
+        global_indices_list = []
+
+        #Permuting the dof ids to get the global indices
+        for i in range(Element.num_dofs):
+            for j in range(Element.num_dofs):
+                tup = (self.dof_ids[i], self.dof_ids[j])
+                global_indices_list.append(tup)
+
+        #Converting list into array
+        self.global_indices = np.empty(len(global_indices_list), dtype=object)
+        self.global_indices[:] = global_indices_list
+        newshape = (Element.num_dofs, Element.num_dofs)
+        self.global_indices = np.reshape(self.global_indices, newshape=newshape)
 
     def generate_stiffness_matrix(self):
         '''

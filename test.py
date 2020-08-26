@@ -39,3 +39,5 @@ Element.stiffness_integrand_generator()
 Element.set_transformation_matrix_sym()
 
 e = Element.edict[1]
+e.generate_global_indices()
+print(e.global_indices)
