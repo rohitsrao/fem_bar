@@ -17,6 +17,10 @@ import pandas as pd
 
 from preprocessing import *
 
+#Intialising
+Element.stiffness_integrand_generator()
+Element.set_transformation_matrix_sym()
+
 #Creating a material
 mat1 = Material(name='mat1', E=50000)
 
@@ -29,15 +33,13 @@ f = './nodes.csv'
 Node.create_nodes_from_csv(f)
 Node.display_nodes()
 
+
 #Creating elements from csv
 f = './elements.csv'
 Element.create_elements_from_csv(f)
 Element.set_material(mat1)
 Element.display_elements()
 
-Element.stiffness_integrand_generator()
-Element.set_transformation_matrix_sym()
+truss = Truss()
+truss.assemble()
 
-e = Element.edict[1]
-e.generate_global_indices()
-print(e.global_indices)

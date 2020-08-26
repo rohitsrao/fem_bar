@@ -51,7 +51,7 @@ class Element():
     num_dofs = 4
 
     #Initializer
-    def __init__(self, n1, n2, A):
+    def __init__(self, n1, n2, A, mat):
 
         '''
         Create a bar element between two nodes n1 and n2
@@ -68,10 +68,14 @@ class Element():
         self.id = Element.count
 
         #Creating a placeholder for material
-        self.mat = None
+        self.mat = mat
 
         #Setting the area of the element
         self.A = A
+
+        #Defining weights and points for gauss integration
+        self.gp = [0]
+        self.w = [2]
 
         #Creating a dictionary to store nodes belonging to an element
         self.n = {}
@@ -94,9 +98,15 @@ class Element():
         #Computing element geometry
         self.compute_geometry()
 
-        #Defining weights and points for gauss integration
-        self.gp = [0]
-        self.w = [2]
+        #Compute the global indices of the element
+        self.generate_global_indices()
+
+        #Generate the global stiffness matrix
+        self.generate_stiffness_matrix()
+
+        #Transform generated stiffness matrix
+        self.transform_k_local_global()
+
 
     @classmethod
     def create_elements_from_csv(cls, f):
@@ -129,12 +139,18 @@ class Element():
             #Extracing the area from the row
             A = df.iloc[i]['A']
 
+            #Extracting the material from the row
+            mat_name = df.iloc[i]['mat']
+
             #Extracting the node objects corresponding to node ids
             n1 = Node.ndict[n1_id]
             n2 = Node.ndict[n2_id]
 
+            #Extracting material object using mat_name
+            mat = Material.mat_dict[mat_name]
+
             #Create node by calling initializer
-            cls(n1, n2, A)
+            cls(n1, n2, A, mat)
 
         #Deleting dataframe after elements have been created
         del df
@@ -394,7 +410,6 @@ class Element():
         self.k_global_2d = np.matmul(self.T, temp)
 
 
-
 #Class for Load
 class Load():
 
@@ -404,7 +419,6 @@ class Load():
    count = 0
 
    def __init__(self, symbol, value=None):
-
        '''
        Initializer for the load class
 
@@ -428,6 +442,9 @@ class Load():
 #Class for Material
 class Material():
 
+    #Defining a dictionary to store all created material objects
+    mat_dict = {}
+
     #Initializer
     def __init__(self, name, E):
 
@@ -437,6 +454,9 @@ class Material():
         #Setting the Young's Modulus of the mateelement
         #typecasts user value for E into float
         self.E = float(E)
+
+        #Adding material object to dictionary
+        Material.mat_dict[self.name] = self
 
 #Class for Node
 class Node():
@@ -450,6 +470,8 @@ class Node():
     #keys are the node ids
     ndict = {}
 
+    #Number of DOFs per node
+    num_dofs = 2
 
     #Initializer
     def __init__(self, x, y):
@@ -563,5 +585,35 @@ class Truss():
         #Adding reference to the dictionary of nodes and elements
         self.ndict = Node.ndict
         self.edict = Element.edict
+
+        #Defining the dimension of the global stiffness matrix for the truss
+        self.global_dimension = len(Node.ndict)*Node.num_dofs
+        
+    def assemble(self):
+        '''
+        Assembles the global stiffness matrix for the truss
+        '''
+
+        #Define a matrix of zeros
+        k_shape = (self.global_dimension, self.global_dimension)
+        self.K = np.zeros(shape=k_shape)
+
+        #Loop through each element
+        for e in self.edict.values():
+
+            #Looping through the local stiffness matrix
+            for i in range(e.num_dofs):
+                for j in range(e.num_dofs):
+
+                    #Extracting the global indices
+                    gi = e.global_indices[i, j][0]
+                    gj = e.global_indices[i, j][1]
+
+                    #Subtracting 1 from global indices as 
+                    #indexings starts from 0 
+                    gi -= 1
+                    gj -= 1
+
+                    self.K[gi, gj] += e.k_local_2d[i, j]
 
 
