@@ -571,7 +571,7 @@ class Node():
             row.append(str(n.dofs['UX'].value))
             row.append(str(n.dofs['UY'].value))
             row.append(str(n.loads['FX'].value))
-            row.append(str(n.loads['FX'].value))
+            row.append(str(n.loads['FY'].value))
             print(''.join(cell.ljust(cell_width) for cell in row))
         
         #Final print to create space
