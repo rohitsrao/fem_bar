@@ -297,21 +297,42 @@ class Element():
         '''
 
         #Compute the symbolic 1d stiffness matrix
-        self.k_1d_s = self.gauss_integrator(Element.integrand)
+        self.k_local_1d_s = self.gauss_integrator(Element.integrand)
 
         #Convert from symbolic matrix into numpy matrix
         sub_list = [(Element.E, self.mat.E), 
                     (Element.L, self.L),
                     (Element.A, self.A)]
-        self.k_1d = self.k_1d_s.subs(sub_list)
+        self.k_local_1d = self.k_local_1d_s.subs(sub_list)
+        self.k_local_1d = np.array(self.k_local_1d)
 
         #Converting this 1d stiffness matrix into a 2D with zeros
         #for the appropriate terms in the y-direction
-        self.k = np.zeros(shape=(4, 4))
-        self.k[0, 0] = self.k_1d[0, 0]
-        self.k[0, 2] = self.k_1d[0, 1]
-        self.k[2, 0] = self.k_1d[1, 0]
-        self.k[2, 2] = self.k_1d[1, 1]
+        #This is still in local coordinate system
+        self.k_local_2d = np.zeros(shape=(4, 4))
+        self.k_local_2d[0, 0] = self.k_local_1d[0, 0]
+        self.k_local_2d[0, 2] = self.k_local_1d[0, 1]
+        self.k_local_2d[2, 0] = self.k_local_1d[1, 0]
+        self.k_local_2d[2, 2] = self.k_local_1d[1, 1]
+
+    #IGNORE THIS METHOD IN THIS COMMIT
+    #def transform_k_local_global(self):
+    #    '''
+    #    This method transforms the 2D stiffness matrix from the local coordinate
+    #    system to the global coordinate system
+    #    '''
+
+    #    #Computing the transformation matrix for element
+    #    #by substituting angle
+    #    T = Element.T.subs(Element.phi, self.theta)
+    #    print()
+    #    print(type(T))
+    #    print()
+    #    print(T)
+    #    print()
+
+    #    #Transforming the 2d local stiffness matrix to 2d global stiffness matrix
+    #    self.k_global_2d = np.matmul(T, np.matmul(self.k_local_2d, np.linalg.inv(T)))
 
 #Class for material
 class Material():
