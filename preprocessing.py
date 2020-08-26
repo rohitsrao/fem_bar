@@ -582,7 +582,7 @@ class Node():
         Applies the load component at a node
         comp is a string
         '''
-        self.loads[comp].value = value
+        self.loads[comp].value = float(value)
 
 
 
@@ -647,3 +647,5 @@ class Truss():
             n_id = df.iloc[i]['node id']
             comp = df.iloc[i]['comp']
             value = df.iloc[i]['value']
+
+            self.ndict[n_id].apply_load(comp, value)
