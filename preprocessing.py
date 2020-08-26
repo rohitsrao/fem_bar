@@ -616,4 +616,25 @@ class Truss():
 
                     self.K[gi, gj] += e.k_local_2d[i, j]
 
+    def apply_loads_from_csv(self, f):
+        '''
+        This method applies loads at nodes from csv
 
+        Inputs
+        f - csv - columns should be node id, comp, value
+        comp stands for component
+        '''
+
+        #Creating a dataframe from csv
+        df = pd.read_csv(f)
+
+        #Compute the number of rows in the csv
+        num_rows = df.shape[0]
+
+        #Loop through the rows
+        for i in range(num_rows): 
+
+            #Extract the node id, component and value
+            n_id = df.iloc[i]['node id']
+            comp = df.iloc[i]['comp']
+            value = df.iloc[i]['value']
