@@ -316,6 +316,7 @@ class Element():
 
         return integral
 
+
     def generate_stiffness_matrix(self):
         '''
         This method is to generate the element stiffness matrix for the 
@@ -426,13 +427,21 @@ class Node():
         self.x = float(x)
         self.y = float(y)
 
+        #Creating a dictionary to store the dofs
+        #belonging to current node
+        self.dofs = {}
+
         #Initializing degrees of freedom for this node
-        self.UX = DOF(symbol='UX')
-        self.UY = DOF(symbol='UY')
+        self.dofs['UX'] = DOF(symbol='UX')
+        self.dofs['UY'] = DOF(symbol='UY')
+
+        #Creating a dictionary to store the loads
+        #belonging to current node
+        self.loads = {}
 
         #Initializing applied forces at this node
-        self.FX = Load(symbol='FX')
-        self.FY = Load(symbol='FY')
+        self.loads['FX'] = Load(symbol='FX')
+        self.loads['FY'] = Load(symbol='FY')
 
         #Adding the created node to ndict
         Node.ndict[self.id] = self
@@ -499,15 +508,14 @@ class Node():
             row.append(str(n.id))
             row.append(str(n.x))
             row.append(str(n.y))
-            row.append(str(n.UX.value))
-            row.append(str(n.UY.value))
-            row.append(str(n.FX.value))
-            row.append(str(n.FY.value))
+            row.append(str(n.dofs['UX'].value))
+            row.append(str(n.dofs['UY'].value))
+            row.append(str(n.loads['FX'].value))
+            row.append(str(n.loads['FX'].value))
             print(''.join(cell.ljust(cell_width) for cell in row))
         
         #Final print to create space
         print()
-
 
 #Class for Truss
 class Truss():
@@ -517,4 +525,5 @@ class Truss():
         #Adding reference to the dictionary of nodes and elements
         self.ndict = Node.ndict
         self.edict = Element.edict
+
 
