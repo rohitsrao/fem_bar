@@ -364,7 +364,8 @@ class Load():
    #counter value serves as Load ID
    count = 0
 
-   def __init__(self, symbol, value=None:
+   def __init__(self, symbol, value=None):
+
        '''
        Initializer for the load class
 
@@ -377,7 +378,7 @@ class Load():
        Load.count += 1
 
        #Set load id
-       self.id = count
+       self.id = Load.count
 
        #Set symbol
        self.symbol = symbol
@@ -429,6 +430,10 @@ class Node():
         self.UX = DOF(symbol='UX')
         self.UY = DOF(symbol='UY')
 
+        #Initializing applied forces at this node
+        self.FX = Load(symbol='FX')
+        self.FY = Load(symbol='FY')
+
         #Adding the created node to ndict
         Node.ndict[self.id] = self
 
@@ -479,7 +484,7 @@ class Node():
         cell_width = col_width + col_pad
 
         #Column names
-        col_names = ['Node ID', 'X', 'Y', 'UX', 'UY']
+        col_names = ['Node ID', 'X', 'Y', 'UX', 'UY', 'FX', 'FY']
         print(''.join(name.ljust(cell_width) for name in col_names))
 
         #Horizontal line below column name
@@ -496,6 +501,8 @@ class Node():
             row.append(str(n.y))
             row.append(str(n.UX.value))
             row.append(str(n.UY.value))
+            row.append(str(n.FX.value))
+            row.append(str(n.FY.value))
             print(''.join(cell.ljust(cell_width) for cell in row))
         
         #Final print to create space
