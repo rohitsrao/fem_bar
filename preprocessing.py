@@ -235,7 +235,7 @@ class Element():
         y2 = self.n[1].y
 
         #Computing length
-        self.l = np.sqrt((x2-x1)**2 + (y2-y1)**2)
+        self.L = np.sqrt((x2-x1)**2 + (y2-y1)**2)
 
         #Computing the angle
         m = (y2-y1)/(x2-x1)
