@@ -47,3 +47,8 @@ truss.assemble()
 f = './loads.csv'
 truss.apply_loads_from_csv(f)
 Node.display_nodes()
+
+#Apply bcs from csv
+f = './bcs.csv'
+truss.apply_bcs_from_csv(f)
+Node.display_nodes()

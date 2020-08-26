@@ -29,13 +29,11 @@ class BC():
         self.n = Node.ndict[n_id]
 
         #Set BC
-        self.n.dofs[comp] = float(value)
+        self.n.dofs[comp].value = float(value)
 
         #Add DOF id to list
-        dof_ids.append(self.n.dofs[comp].id)
-
-
-
+        
+        BC.dof_ids.append(self.n.dofs[comp].id)
 
 #Class for DOF
 class DOF():
@@ -653,6 +651,30 @@ class Truss():
 
                     self.K[gi, gj] += e.k_local_2d[i, j]
 
+    def apply_bcs_from_csv(self, f):
+        '''
+        This method applies boundary conditions from a csv file
+        csv flie must contain columns - node id, comp, value
+        comp must be a string 'UX' or 'UY'
+        '''
+
+        #Creating a dataframe from csv
+        df = pd.read_csv(f)
+
+        #Computing the number of rows in the dataframe
+        num_rows = df.shape[0]
+
+        #Loop through the rows
+        for i in range(num_rows):
+
+            #Extract the node id, component and value
+            n_id = df.iloc[i]['node id']
+            comp = df.iloc[i]['comp']
+            value = df.iloc[i]['value']
+
+            #Apply BC
+            BC(n_id, comp, value)
+
     def apply_loads_from_csv(self, f):
         '''
         This method applies loads at nodes from csv
@@ -676,7 +698,11 @@ class Truss():
             comp = df.iloc[i]['comp']
             value = df.iloc[i]['value']
 
-            self.ndict[n_id].apply_load(comp, value)
+            #Extract the node object
+            n = self.ndict[n_id]
+
+            #Apply load
+            n.apply_load(comp, value)
 
         #Deleting dataframe
         del df
