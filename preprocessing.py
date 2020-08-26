@@ -27,6 +27,9 @@ class DOF():
         #Increment counter
         DOF.count += 1
 
+        #Setting DOF id
+        self.id = DOF.count
+
         #Setting the symbol
         self.symbol = symbol
 
@@ -73,6 +76,14 @@ class Element():
         #Adding node objects to the dictionary
         self.n[0] = n1
         self.n[1] = n2
+
+        #Creating a list to keep track of dof_ids belonging to an element
+        self.dof_ids = []
+
+        #Adding dof_ids to created list
+        for n in self.n.values():
+            for d in n.dofs.values():
+                self.dof_ids.append(d.id)
 
         #Adding the created element to the edict dictionary
         Element.edict[self.id] = self
@@ -316,7 +327,6 @@ class Element():
 
         return integral
 
-
     def generate_stiffness_matrix(self):
         '''
         This method is to generate the element stiffness matrix for the 
@@ -356,6 +366,8 @@ class Element():
         #Transforming the 2d local stiffness matrix to 2d global stiffness matrix
         temp = np.matmul(self.k_local_2d, np.linalg.inv(self.T))
         self.k_global_2d = np.matmul(self.T, temp)
+
+
 
 #Class for Load
 class Load():
