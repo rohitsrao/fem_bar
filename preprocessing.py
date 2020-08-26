@@ -356,6 +356,35 @@ class Element():
         temp = np.matmul(self.k_local_2d, np.linalg.inv(self.T))
         self.k_global_2d = np.matmul(self.T, temp)
 
+#Class for Load
+class Load():
+
+   #Defining a counter as class variable
+   #Keeps count of number of loads created
+   #counter value serves as Load ID
+   count = 0
+
+   def __init__(self, symbol, value=None:
+       '''
+       Initializer for the load class
+
+       Inputs
+       symbol - String - FX or FY
+       value - Float value - Default is None
+       '''
+       
+       #Increment counter
+       Load.count += 1
+
+       #Set load id
+       self.id = count
+
+       #Set symbol
+       self.symbol = symbol
+
+       #Set value
+       self.value = value
+
 #Class for Material
 class Material():
 
