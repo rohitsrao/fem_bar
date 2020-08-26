@@ -7,6 +7,36 @@ import sympy as sp
 
 from sympy.solvers.solveset import linsolve
 
+#Class for Bounday Condition
+class BC():
+
+    #Defining a counter variable to keep track of number of BC
+    #Counter serves as BC id
+    count = 0
+
+    #Keeping a list of dof_ids where boundary conditions are applied
+    dof_ids = []
+
+    def __init__(self, n_id, comp, value):
+
+        #Increment counter
+        BC.count += 1
+
+        #Set BC id
+        self.id = BC.count
+
+        #Set node object
+        self.n = Node.ndict[n_id]
+
+        #Set BC
+        self.n.dofs[comp] = float(value)
+
+        #Add DOF id to list
+        dof_ids.append(self.n.dofs[comp].id)
+
+
+
+
 #Class for DOF
 class DOF():
 
