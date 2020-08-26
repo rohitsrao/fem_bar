@@ -10,10 +10,28 @@ from sympy.solvers.solveset import linsolve
 #Class for DOF
 class DOF():
 
-    def __init__(self):
-        pass
+    #Defining a counter as class variable
+    #Keeps count of the number of elements created
+    #Counter serves as dof id
+    count = 0
 
+    def __init__(self, symbol, value=None):
+        '''
+        Initializer for the DOF class
 
+        Inputs 
+        symbol - String - ux or uy
+        value - Float value - By default set to None
+        '''
+
+        #Increment counter
+        DOF.count += 1
+
+        #Setting the symbol
+        self.symbol = symbol
+
+        #Setting the value
+        self.value = value
 
 #Class for Bar Element
 class Element():
@@ -453,6 +471,8 @@ class Node():
         #Final print to create space
         print()
 
+        self.edict = Element.edict
+
 #Class for Truss
 class Truss():
 
@@ -460,4 +480,3 @@ class Truss():
 
         #Adding reference to the dictionary of nodes and elements
         self.ndict = Node.ndict
-        self.edict = Element.edict
