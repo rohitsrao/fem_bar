@@ -381,6 +381,7 @@ class Node():
     #keys are the node ids
     ndict = {}
 
+
     #Initializer
     def __init__(self, x, y):
 
@@ -396,8 +397,8 @@ class Node():
         self.y = float(y)
 
         #Initializing degrees of freedom for this node
-        self.ux = None
-        self.uy = None
+        self.UX = DOF(symbol='UX')
+        self.UY = DOF(symbol='UY')
 
         #Adding the created node to ndict
         Node.ndict[self.id] = self
@@ -449,7 +450,7 @@ class Node():
         cell_width = col_width + col_pad
 
         #Column names
-        col_names = ['Node ID', 'X', 'Y', 'ux', 'uy']
+        col_names = ['Node ID', 'X', 'Y', 'UX', 'UY']
         print(''.join(name.ljust(cell_width) for name in col_names))
 
         #Horizontal line below column name
@@ -464,14 +465,13 @@ class Node():
             row.append(str(n.id))
             row.append(str(n.x))
             row.append(str(n.y))
-            row.append(str(n.ux))
-            row.append(str(n.uy))
+            row.append(str(n.UX.value))
+            row.append(str(n.UY.value))
             print(''.join(cell.ljust(cell_width) for cell in row))
         
         #Final print to create space
         print()
 
-        self.edict = Element.edict
 
 #Class for Truss
 class Truss():
@@ -480,3 +480,5 @@ class Truss():
 
         #Adding reference to the dictionary of nodes and elements
         self.ndict = Node.ndict
+        self.edict = Element.edict
+
