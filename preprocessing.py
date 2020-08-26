@@ -7,6 +7,14 @@ import sympy as sp
 
 from sympy.solvers.solveset import linsolve
 
+#Class for DOF
+class DOF():
+
+    def __init__(self):
+        pass
+
+
+
 #Class for Bar Element
 class Element():
 
@@ -330,7 +338,7 @@ class Element():
         temp = np.matmul(self.k_local_2d, np.linalg.inv(self.T))
         self.k_global_2d = np.matmul(self.T, temp)
 
-#Class for material
+#Class for Material
 class Material():
 
     #Initializer
@@ -343,7 +351,7 @@ class Material():
         #typecasts user value for E into float
         self.E = float(E)
 
-#Class for a Node
+#Class for Node
 class Node():
 
     #Defining a counter as class variable
@@ -445,6 +453,8 @@ class Node():
         #Final print to create space
         print()
 
+        self.edict = Element.edict
+
 #Class for Truss
 class Truss():
 
@@ -452,4 +462,3 @@ class Truss():
 
         #Adding reference to the dictionary of nodes and elements
         self.ndict = Node.ndict
-        self.edict = Element.edict
