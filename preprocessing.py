@@ -453,8 +453,6 @@ class Node():
         #Final print to create space
         print()
 
-        self.edict = Element.edict
-
 #Class for Truss
 class Truss():
 
@@ -462,3 +460,4 @@ class Truss():
 
         #Adding reference to the dictionary of nodes and elements
         self.ndict = Node.ndict
+        self.edict = Element.edict
