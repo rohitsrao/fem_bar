@@ -577,6 +577,15 @@ class Node():
         #Final print to create space
         print()
 
+    def apply_load(self, comp, value):
+        '''
+        Applies the load component at a node
+        comp is a string
+        '''
+        self.loads[comp].value = value
+
+
+
 #Class for Truss
 class Truss():
 
