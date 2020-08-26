@@ -315,26 +315,20 @@ class Element():
         self.k_local_2d[2, 0] = self.k_local_1d[1, 0]
         self.k_local_2d[2, 2] = self.k_local_1d[1, 1]
 
-    #IGNORE THIS METHOD IN THIS COMMIT
-    #def transform_k_local_global(self):
-    #    '''
-    #    This method transforms the 2D stiffness matrix from the local coordinate
-    #    system to the global coordinate system
-    #    '''
+    def transform_k_local_global(self):
+        '''
+        This method transforms the 2D stiffness matrix from the local coordinate
+        system to the global coordinate system
+        '''
 
-    #    #Computing the transformation matrix for element
-    #    #by substituting angle
-    #    self.T = Element.T.subs(Element.phi, self.theta)
-    #    self.T = np.array(self.T).astype(np.float64)
-    #    print()
-    #    print(self.T)
-    #    print()
-    #    print(np.linalg.inv(self.T))
-    #    print()
+        #Computing the transformation matrix for element
+        #by substituting angle
+        self.T = Element.T.subs(Element.phi, self.theta)
+        self.T = np.array(self.T).astype(np.float64)
 
-    #    #Transforming the 2d local stiffness matrix to 2d global stiffness matrix
-    #    temp = np.matmul(self.k_local_2d, np.linalg.inv(self.T))
-    #    self.k_global_2d = np.matmul(T, temp)
+        #Transforming the 2d local stiffness matrix to 2d global stiffness matrix
+        temp = np.matmul(self.k_local_2d, np.linalg.inv(self.T))
+        self.k_global_2d = np.matmul(self.T, temp)
 
 #Class for material
 class Material():
