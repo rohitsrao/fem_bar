@@ -222,6 +222,29 @@ class Element():
         for e in cls.edict.values():
             e.mat = mat
 
+    @classmethod
+    def set_transformation_matrix_sym(cls):
+        '''
+        This method is to set the symbolic transformation matrix
+        to relate quantities from the local coordinate system to the
+        global coordinate system
+        '''
+        
+        #Defining a symbolic angle
+        cls.phi = sp.symbols('phi')
+
+        #Defining symbolic transformation matrix
+        #T transforms quantities from local coordinate to global coordiante
+        cls.T = sp.Matrix(np.zeros(shape=(4, 4)))
+        cls.T[0, 0] = sp.cos(cls.phi)
+        cls.T[0, 1] = -sp.sin(cls.phi)
+        cls.T[1, 0] = sp.sin(cls.phi)
+        cls.T[1, 1] = sp.cos(cls.phi)
+        cls.T[2, 2] = sp.cos(cls.phi)
+        cls.T[2, 3] = -sp.sin(cls.phi)
+        cls.T[3, 2] = sp.sin(cls.phi)
+        cls.T[3, 3] = sp.cos(cls.phi)
+
     def compute_geometry(self):
         '''
         Method to compute the length and angle of the element

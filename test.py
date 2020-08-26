@@ -36,7 +36,10 @@ Element.set_material(mat1)
 Element.display_elements()
 
 Element.stiffness_integrand_generator()
+Element.set_transformation_matrix_sym()
 
 e = Element.edict[1]
 e.generate_stiffness_matrix()
 print(e.k)
+print()
+print(Element.T)
