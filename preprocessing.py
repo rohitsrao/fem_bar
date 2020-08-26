@@ -272,13 +272,15 @@ class Element():
         This method is to generate the element stiffness matrix for the 
         1D bar via gauss integration
         '''
+
         #Compute the symbolic 1d stiffness matrix
         self.k_1d_s = self.gauss_integrator(Element.integrand)
 
         #Convert from symbolic matrix into numpy matrix
-        #sub_list = [(Element.E, self.mat.E), 
-        #            (Element.L, self.l),
-        #            (Element.A, self.A)]
+        sub_list = [(Element.E, self.mat.E), 
+                    (Element.L, self.L),
+                    (Element.A, self.A)]
+        self.k_1d = self.k_1d_s.subs(sub_list)
 
         #Converting this 1d stiffness matrix into a 2D with zeros
         #for the appropriate terms in the y-direction

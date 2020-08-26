@@ -39,6 +39,4 @@ Element.stiffness_integrand_generator()
 
 e = Element.edict[1]
 e.generate_stiffness_matrix()
-print(e.k_1d)
-print()
 print(e.k)
