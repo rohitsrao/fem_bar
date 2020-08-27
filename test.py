@@ -52,3 +52,6 @@ Node.display_nodes()
 f = './bcs.csv'
 truss.apply_bcs_from_csv(f)
 Node.display_nodes()
+
+truss.assemble_reduced()
+print(truss.Kr.shape)

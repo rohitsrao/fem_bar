@@ -428,14 +428,7 @@ class Element():
 
                     #Figure out how many dof_ids are lesser than idx1 and idx2
                     count1 = len([k for k in BC.dof_ids if k < idx1])
-                    count2 = len([k for k in BC.dof_ids if k > idx2])
-
-                    #Updating the index values based on the respective count values
-                    idx1 -= count1
-                    idx2 -= count2
-
-                    #Inserting the updated values back into reduced_indices matrix
-                    self.reduced_indices[i, j] = (idx1, idx2)
+                    count2 = len([k for k in BC.dof_ids if k < idx2])
 
                     #Updating the index values based on the respective count values
                     idx1 -= count1
@@ -698,6 +691,46 @@ class Truss():
 
                     self.K[gi, gj] += e.k_local_2d[i, j]
 
+    def assemble_reduced(self):
+        '''
+        This method assembles the reduced stiffness matrix after the application of 
+        boundary conditions
+        '''
+
+        #Compute the dimension of the reduced stiffness matrix
+        self.reduced_dimension = self.global_dimension - len(BC.dof_ids)
+
+        #Initializing the reduced stiffness matrix
+        reduced_shape = (self.reduced_dimension, self.reduced_dimension)
+        self.Kr = np.zeros(shape=(reduced_shape))
+
+        #Looping through each element
+        for e in self.edict.values():
+
+            #Compute the reduced indices for the element
+            e.generate_reduced_indices()
+
+            #Loop through the element stiffness matrix and place each 
+            #element appropriately into the reduced stiffness matrix using the 
+            #reduced indices. Skip if the reduced indices are (None, None)
+            for i in range(Element.num_dofs):
+                for j in range(Element.num_dofs):
+
+                    #If the reduced indices are not (None, None)
+                    if None not in e.reduced_indices[i, j]:
+
+                        #Extract the global indices
+                        gi = e.reduced_indices[i, j][0]
+                        gj = e.reduced_indices[i, j][1]
+
+                        #Subtracting 1 from the indices as element indexing starts from zero
+                        #But tuples contain indices starting from
+                        gi -= 1
+                        gj -= 1
+
+                        #Adding to reduced stiffness matrix
+                        self.Kr[gi, gj] += e.k_local_2d[i, j]
+        
     def apply_bcs_from_csv(self, f):
         '''
         This method applies boundary conditions from a csv file
