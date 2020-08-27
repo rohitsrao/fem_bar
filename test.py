@@ -54,4 +54,4 @@ truss.apply_bcs_from_csv(f)
 Node.display_nodes()
 
 truss.assemble_reduced_stiffness()
-print(truss.Kr.shape)
+
