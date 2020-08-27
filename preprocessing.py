@@ -837,3 +837,17 @@ class Truss():
         u_shape = (self.reduced_dimension, 1)
         self.u = np.zeros(shape=u_shape)
 
+    def solve_elastic(self):
+        '''
+        This method solves the reduced stiffness matrix and reduced force vector
+        '''
+
+        df = pd.DataFrame(self.Kr)
+        df.to_csv('./kr.csv', index=False, header=False)
+
+        #Solving the system to compute the displacement increment
+        self.du = np.linalg.solve(self.Kr, self.Fr)
+
+        #Updating the reduced displacement vector
+        self.u += self.du
+
