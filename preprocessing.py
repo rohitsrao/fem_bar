@@ -486,7 +486,7 @@ class Load():
    #counter value serves as Load ID
    count = 0
 
-   def __init__(self, symbol, value=None):
+   def __init__(self, symbol, value=0.0):
        '''
        Initializer for the load class
 
@@ -505,7 +505,7 @@ class Load():
        self.symbol = symbol
 
        #Set value
-       self.value = value
+       self.value = float(value)
 
 #Class for Material
 class Material():
@@ -786,3 +786,34 @@ class Truss():
 
         #Deleting dataframe
         del df
+
+    def generate_reduced_force_vec(self):
+        '''
+        This method generates the reduced force vector
+        '''
+        
+        #Creating a list to store the forces applied on the DOFs without boundary condition
+        reduced_force_list = []
+
+        #Looping through the nodes
+        for n in self.ndict.values():
+
+            #Looping through the nodal degrees of freedom
+            for dof in n.dofs.value():
+
+                #Checking if DOF is free from boundary conditions
+                if dof.id not in BC.dof_ids:
+
+                    #Append forces to the list
+                    if dof.symbol == 'UX':
+                        reduced_force_list.append(n.loads['FX'].value)
+                    if dof.symbol == 'UY':
+                        reduced_force_list.append(n.loads['FY'].value)
+
+        #Converting list to an array
+        self.Fr = np.array(reduced_force_list)
+
+        #Reshaping
+        Fr_shape = (self.reduced_dimension, 1)
+        self.Fr = np.reshape(self.Fr, newshape=Fr_shape)
+
