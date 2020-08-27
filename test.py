@@ -55,4 +55,5 @@ Node.display_nodes()
 
 truss.assemble_reduced_stiffness()
 truss.generate_reduced_force_vec()
-print(truss.Fr)
+truss.prep_for_solving()
+print(truss.u)

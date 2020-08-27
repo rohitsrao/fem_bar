@@ -43,6 +43,9 @@ class DOF():
     #Counter serves as dof id
     count = 0
 
+    #Defining a list to keep track of all created dof_ids
+    dof_ids = []
+
     def __init__(self, symbol, value=None):
         '''
         Initializer for the DOF class
@@ -63,6 +66,9 @@ class DOF():
 
         #Setting the value
         self.value = value
+
+        #Add the dof_id to the list
+        DOF.dof_ids.append(self.id)
 
 #Class for Bar Element
 class Element():
@@ -815,4 +821,19 @@ class Truss():
         #Reshaping
         Fr_shape = (self.reduced_dimension, 1)
         self.Fr = np.reshape(self.Fr, newshape=Fr_shape)
+
+    def prep_for_solving(self):
+        '''
+        This method is to compute some basic parameters and initiliaze variables
+        needed for solving
+        '''
+
+        #Generating a list of active dofs. Active dof_ids are those dofs where no boundary
+        #condition has been specified. 
+        self.active_dofs = [i for i in DOF.dof_ids if i not in BC.dof_ids] 
+
+        #Initialize a reduced displacement vector with zeros to store the values
+        #of displacment vector at the active dofs
+        u_shape = (self.reduced_dimension, 1)
+        self.u = np.zeros(shape=u_shape)
 
