@@ -842,12 +842,30 @@ class Truss():
         This method solves the reduced stiffness matrix and reduced force vector
         '''
 
-        df = pd.DataFrame(self.Kr)
-        df.to_csv('./kr.csv', index=False, header=False)
-
         #Solving the system to compute the displacement increment
         self.du = np.linalg.solve(self.Kr, self.Fr)
 
         #Updating the reduced displacement vector
         self.u += self.du
 
+                    dof.value = self.u[row, 0]
+
+    def update_dofs(self):
+        '''
+        This method is to update the dof values after solve_elastic() has successfully run
+        '''
+
+        #Looping through the nodes
+        for n in self.ndict.values():
+
+            #Looping through the dofs in the node
+            for dof in n.dofs.values():
+
+                #If the dof is an active dof
+                if dof.id in self.active_dofs:
+
+                    #Then set the value of that dof to be the value from the 
+                    #corresponding value from the solution vector. The index of the
+                    #corresponding term in the solution vector is determined from the 
+                    #dof_id's index in self.active_dofs
+                    row = self.active_dofs.index(dof.id)
