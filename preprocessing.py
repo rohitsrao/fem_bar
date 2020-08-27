@@ -397,6 +397,53 @@ class Element():
         newshape = (Element.num_dofs, Element.num_dofs)
         self.global_indices = np.reshape(self.global_indices, newshape=newshape)
 
+    def generate_reduced_indices(self):
+        '''
+        This method generates reduced indices for assembly into the reduced stiffness matrix
+        '''
+
+        #Making a copy of the global indices
+        self.reduced_indices = np.copy(self.global_indices)
+
+        #Looping through the tuples
+        for i in range(Element.num_dofs):
+            for j in range(Element.num_dofs):
+
+                #Each compoment of the reduced_indices array is a tuple of indices
+                #indicate where that element of the local stiffness matrix fits into the
+                #global stiffness matrix. Now if any of the dof_ids have a BC applied to them
+                #we set the tuple to be (None, None). If no bc is applied to that DOF then its 
+                #new position in the reduced global stiffness matrix is computed by subtracting 
+                #from that index the number of dof_ids that are lower than that index
+                #Setting the reudced indices to None if index is in BC.dof_ids
+                if any(x in self.reduced_indices[i, j] for x in BC.dof_ids) == True:
+
+                    self.reduced_indices[i, j] = (None, None)
+
+                else:
+
+                    #Extracting the indices of the tuple
+                    idx1 = self.reduced_indices[i, j][0]
+                    idx2 = self.reduced_indices[i, j][1]
+
+                    #Figure out how many dof_ids are lesser than idx1 and idx2
+                    count1 = len([k for k in BC.dof_ids if k < idx1])
+                    count2 = len([k for k in BC.dof_ids if k > idx2])
+
+                    #Updating the index values based on the respective count values
+                    idx1 -= count1
+                    idx2 -= count2
+
+                    #Inserting the updated values back into reduced_indices matrix
+                    self.reduced_indices[i, j] = (idx1, idx2)
+
+                    #Updating the index values based on the respective count values
+                    idx1 -= count1
+                    idx2 -= count2
+
+                    #Inserting the updated values back into reduced_indices matrix
+                    self.reduced_indices[i, j] = (idx1, idx2)
+
     def generate_stiffness_matrix(self):
         '''
         This method is to generate the element stiffness matrix for the 
