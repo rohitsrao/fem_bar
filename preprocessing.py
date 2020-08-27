@@ -477,7 +477,6 @@ class Element():
         temp = np.matmul(self.k_local_2d, np.linalg.inv(self.T))
         self.k_global_2d = np.matmul(self.T, temp)
 
-
 #Class for Load
 class Load():
 
@@ -799,7 +798,7 @@ class Truss():
         for n in self.ndict.values():
 
             #Looping through the nodal degrees of freedom
-            for dof in n.dofs.value():
+            for dof in n.dofs.values():
 
                 #Checking if DOF is free from boundary conditions
                 if dof.id not in BC.dof_ids:

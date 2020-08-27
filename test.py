@@ -54,4 +54,5 @@ truss.apply_bcs_from_csv(f)
 Node.display_nodes()
 
 truss.assemble_reduced_stiffness()
-
+truss.generate_reduced_force_vec()
+print(truss.Fr)
