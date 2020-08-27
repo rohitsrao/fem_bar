@@ -664,7 +664,7 @@ class Truss():
         #Defining the dimension of the global stiffness matrix for the truss
         self.global_dimension = len(Node.ndict)*Node.num_dofs
         
-    def assemble(self):
+    def assemble_full_stiffness(self):
         '''
         Assembles the global stiffness matrix for the truss
         '''
@@ -691,7 +691,7 @@ class Truss():
 
                     self.K[gi, gj] += e.k_local_2d[i, j]
 
-    def assemble_reduced(self):
+    def assemble_reduced_stiffness(self):
         '''
         This method assembles the reduced stiffness matrix after the application of 
         boundary conditions

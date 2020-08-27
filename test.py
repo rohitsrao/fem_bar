@@ -41,7 +41,7 @@ Element.set_material(mat1)
 Element.display_elements()
 
 truss = Truss()
-truss.assemble()
+truss.assemble_full_stiffness()
 
 #Apply loads from csv
 f = './loads.csv'
@@ -53,5 +53,5 @@ f = './bcs.csv'
 truss.apply_bcs_from_csv(f)
 Node.display_nodes()
 
-truss.assemble_reduced()
+truss.assemble_reduced_stiffness()
 print(truss.Kr.shape)
