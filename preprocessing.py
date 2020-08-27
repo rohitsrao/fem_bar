@@ -639,12 +639,25 @@ class Node():
             #Creating a row of the output table
             row = []
             row.append(str(n.id))
-            row.append(str(n.x))
-            row.append(str(n.y))
-            row.append(str(n.dofs['UX'].value))
-            row.append(str(n.dofs['UY'].value))
-            row.append(str(n.loads['FX'].value))
-            row.append(str(n.loads['FY'].value))
+            row.append('{:.4f}'.format(n.x))
+            row.append('{:.4f}'.format(n.y))
+
+            #For UX and UY we need to check if the value is None or not 
+            #before formatting its ouput
+
+            if n.dofs['UX'].value == None:
+                row.append(str(n.dofs['UX'].value))
+            else:
+                row.append('{:.4f}'.format(n.dofs['UX'].value))
+
+            if n.dofs['UY'].value == None:
+                row.append(str(n.dofs['UY'].value))
+            else:
+                row.append('{:.4f}'.format(n.dofs['UY'].value))
+
+            row.append('{:.2f}'.format(n.loads['FX'].value))
+            row.append('{:.2f}'.format(n.loads['FY'].value))
+
             print(''.join(cell.ljust(cell_width) for cell in row))
         
         #Final print to create space
@@ -848,8 +861,6 @@ class Truss():
         #Updating the reduced displacement vector
         self.u += self.du
 
-                    dof.value = self.u[row, 0]
-
     def update_dofs(self):
         '''
         This method is to update the dof values after solve_elastic() has successfully run
@@ -869,3 +880,4 @@ class Truss():
                     #corresponding term in the solution vector is determined from the 
                     #dof_id's index in self.active_dofs
                     row = self.active_dofs.index(dof.id)
+                    dof.value = self.u[row, 0]
