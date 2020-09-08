@@ -844,7 +844,7 @@ class Truss():
                 #from residue vector. 
                 #The row for the residue vector will be the index in
                 #self.active_dofs where the dof_id appears.
-                if dof.id in self.active_dofs:
+                if d.id in self.active_dofs:
 
                     row = self.active_dofs.index(dof.id)
                     n.apply_load_by_dof_id(dof.id, res_vec[row, 0])
