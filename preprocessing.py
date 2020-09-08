@@ -715,9 +715,6 @@ class Truss():
         boundary conditions
         '''
 
-        #Compute the dimension of the reduced stiffness matrix
-        self.reduced_dimension = self.global_dimension - len(BC.dof_ids)
-
         #Initializing the reduced stiffness matrix
         reduced_shape = (self.reduced_dimension, self.reduced_dimension)
         self.Kr = np.zeros(shape=(reduced_shape))
@@ -807,6 +804,14 @@ class Truss():
 
         #Deleting dataframe
         del df
+
+    def compute_reduced_dimension(self):
+        '''
+        Function computes the dimension of the reduced stiffness matrix and load vector
+        '''
+
+        #Compute the dimension of the reduced stiffness matrix
+        self.reduced_dimension = self.global_dimension - len(BC.dof_ids)
 
     def generate_reduced_force_vec(self):
         '''
