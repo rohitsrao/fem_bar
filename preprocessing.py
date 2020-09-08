@@ -773,6 +773,9 @@ class Truss():
         #Save a reference to the list of nodes with BC in Truss object
         self.bc_dof_ids = BC.dof_ids
 
+        #Compute the reduced dimension
+        self.compute_reduced_dimension()
+
     def apply_loads_from_csv(self, f):
         '''
         This method applies loads at nodes from csv
