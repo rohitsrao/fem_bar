@@ -19,7 +19,7 @@ from preprocessing import *
 from solvers import NewtonRaphson
 
 #Intialising
-Element.stiffness_integrand_generator()
+Element.symbolic_quantities_generator()
 Element.set_transformation_matrix_sym()
 
 #Creating a material
@@ -55,7 +55,7 @@ truss.apply_bcs_from_csv(f)
 Node.display_nodes()
 
 #truss.assemble_reduced_stiffness()
-truss.generate_reduced_force_vec()
+#truss.generate_reduced_force_vec()
 #truss.prep_for_solving()
 #truss.solve_elastic()
 #truss.update_dofs()
