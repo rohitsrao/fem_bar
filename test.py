@@ -61,3 +61,6 @@ truss.solve_elastic()
 truss.update_dofs()
 Node.display_nodes()
 
+#Creating solver object
+solver = NewtonRaphson(truss)
+solver.solve()
