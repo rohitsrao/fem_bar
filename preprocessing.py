@@ -572,17 +572,17 @@ class Node():
         #belonging to current node
         self.loads = {}
 
-        #Creating a dictionary to store loads with load_id
+        #Creating a dictionary to store loads with dof_id
         #being the keys
-        self.loads_by_ids = {}
+        self.loads_by_dof_ids = {}
 
         #Initializing applied forces at this node
         self.loads['FX'] = Load(symbol='FX')
         self.loads['FY'] = Load(symbol='FY')
 
-        #Adding to the loads_by_ids dictionary
-        self.loads_by_ids[self.loads['FX'].id] = self.loads['FX']
-        self.loads_by_ids[self.loads['FY'].id] = self.loads['FY']
+        #Adding to the loads_by_dof_ids dictionary
+        self.loads_by_dof_ids[self.dofs['UX'].id] = self.loads['FX']
+        self.loads_by_dof_ids[self.dofs['UY'].id] = self.loads['FY']
 
         #Adding the created node to ndict
         Node.ndict[self.id] = self
@@ -678,12 +678,12 @@ class Node():
         '''
         self.loads[comp].value = float(value)
 
-    def apply_load_by_id(self, load_id, value):
+    def apply_load_by_dof_id(self, dof_id, value):
         '''
         sets value for the load at the nodes but uses
-        load id to index them
+        dof id to index them
         '''
-        self.loads_by_ids[load_id].value = value
+        self.loads_by_dof_ids[dof_id].value = value
 
 
 #Class for Truss
