@@ -33,6 +33,7 @@ class NewtonRaphson():
         int_force_shape = (self.truss.reduced_dimension, 1)
         int_force = np.zeros(shape=int_force_shape)
 
+        #INCREMENT LOOP
         #Applying loads until t=1
         #this is checked by subtracting current value of t from 1 and seeing if it is
         #greater than 1e-12. This needs to be done as delta_t can be fractions
@@ -48,3 +49,21 @@ class NewtonRaphson():
             print('Increment: {}'.format(n))
             print('Pseduo time: {}'.format(t))
             print('-------------------------')
+
+            #Calculating the external force vector to be applied
+            #for this increment
+            ext_force = t*self.truss.Fr
+
+            #Initialise residue vector for this incremenet
+            res_vec = ext_force-int_force
+
+            #Compute the norm of the residue vector
+            res_norm = np.linalg.norm(res_vec)
+
+            #Initialising the iteration counter
+            i = 0
+
+            #ITERATION LOOP
+            while res_norm > cnvrg_delta:
+                print("boo yeah")
+                break
