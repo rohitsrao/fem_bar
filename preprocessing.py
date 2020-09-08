@@ -267,6 +267,7 @@ class Element():
         This method is to set the symbolic transformation matrix
         to relate quantities from the local coordinate system to the
         global coordinate system
+        U = Tu
         '''
         
         #Defining a symbolic angle
@@ -283,6 +284,9 @@ class Element():
         cls.T[2, 3] = -sp.sin(cls.phi)
         cls.T[3, 2] = sp.sin(cls.phi)
         cls.T[3, 3] = sp.cos(cls.phi)
+
+        #Defining the inverse of the transformation matrix
+        cls.T_inv = cls.T.inv()
 
     @classmethod
     def stiffness_integrand_generator(cls):
@@ -411,6 +415,9 @@ class Element():
         '''
         This function computes the strain in the element at the gauss point
         '''
+
+
+
 
     def gauss_integrator(self, integrand):
         '''
