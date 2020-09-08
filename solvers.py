@@ -33,11 +33,18 @@ class NewtonRaphson():
         int_force_shape = (self.truss.reduced_dimension, 1)
         int_force = np.zeros(shape=int_force_shape)
 
-        print('t: {}'.format(t))
-        print('delta_t: {}'.format(delta_t))
-        print('n: {}'.format(n))
-        print('int_force')
-        print(int_force)
-        print()
+        #Applying loads until t=1
+        #this is checked by subtracting current value of t from 1 and seeing if it is
+        #greater than 1e-12. This needs to be done as delta_t can be fractions
+        while (1-t)>1e-12:
 
+            #Increment the increment counter
+            n += 1
 
+            #Increment time
+            t += delta_t
+
+            #Display current increment
+            print('Increment: {}'.format(n))
+            print('Pseduo time: {}'.format(t))
+            print('-------------------------')
