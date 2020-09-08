@@ -1,5 +1,8 @@
 #This contains all classes for different kinds of solvers
 
+#Libraries
+import numpy as np
+
 class NewtonRaphson():
 
     def __init__(self, truss):
