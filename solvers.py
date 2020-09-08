@@ -33,6 +33,13 @@ class NewtonRaphson():
         int_force_shape = (self.truss.reduced_dimension, 1)
         int_force = np.zeros(shape=int_force_shape)
 
+        #Generating the reduced force vector for the truss
+        self.truss.generate_reduced_force_vec()
+
+        #Calling Truss.prep_for_solving
+        #Initialises certain things
+        self.truss.prep_for_solving()
+
         #INCREMENT LOOP
         #Applying loads until t=1
         #this is checked by subtracting current value of t from 1 and seeing if it is
