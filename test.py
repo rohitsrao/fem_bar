@@ -54,13 +54,13 @@ f = './bcs.csv'
 truss.apply_bcs_from_csv(f)
 Node.display_nodes()
 
-truss.assemble_reduced_stiffness()
+#truss.assemble_reduced_stiffness()
 truss.generate_reduced_force_vec()
-truss.prep_for_solving()
-truss.solve_elastic()
-truss.update_dofs()
-Node.display_nodes()
+#truss.prep_for_solving()
+#truss.solve_elastic()
+#truss.update_dofs()
+#Node.display_nodes()
 
 #Creating solver object
 solver = NewtonRaphson(truss)
-solver.solve()
+solver.solve(num_increments=3)

@@ -77,4 +77,7 @@ class NewtonRaphson():
                 for e in self.truss.edict.values():
                     e.generate_stiffness_matrix()
 
+                #Apply residue to nodes
+                self.truss.apply_residue_to_nodes(res_vec)
+
                 break

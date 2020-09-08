@@ -865,7 +865,6 @@ class Truss():
         #Compute the dimension of the reduced stiffness matrix
         self.reduced_dimension = self.global_dimension - len(self.bc_dof_ids)
 
-
         #Converting list to an array
         self.Fr = np.array(reduced_force_list)
 
@@ -923,8 +922,6 @@ class Truss():
         #Updating the reduced displacement vector
         self.u += self.du
 
-                    row = self.active_dofs.index(dof.id)
-
     def update_dofs(self):
         '''
         This method is to update the dof values after solve_elastic() has successfully run
@@ -943,3 +940,4 @@ class Truss():
                     #corresponding value from the solution vector. The index of the
                     #corresponding term in the solution vector is determined from the 
                     #dof_id's index in self.active_dofs
+                    row = self.active_dofs.index(dof.id)
