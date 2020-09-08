@@ -865,12 +865,6 @@ class Truss():
         #Compute the dimension of the reduced stiffness matrix
         self.reduced_dimension = self.global_dimension - len(self.bc_dof_ids)
 
-        #Converting list to an array
-        self.Fr = np.array(reduced_force_list)
-
-        #Reshaping
-        Fr_shape = (self.reduced_dimension, 1)
-        self.Fr = np.reshape(self.Fr, newshape=Fr_shape)
 
     def generate_reduced_force_vec(self):
         '''
@@ -894,6 +888,13 @@ class Truss():
                         reduced_force_list.append(n.loads['FX'].value)
                     if dof.symbol == 'UY':
                         reduced_force_list.append(n.loads['FY'].value)
+
+        #Converting list to an array
+        self.Fr = np.array(reduced_force_list)
+
+        #Reshaping
+        Fr_shape = (self.reduced_dimension, 1)
+        self.Fr = np.reshape(self.Fr, newshape=Fr_shape)
 
     def prep_for_solving(self):
         '''
