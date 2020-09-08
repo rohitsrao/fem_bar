@@ -349,6 +349,13 @@ class Element():
             dof_values_list.append(n.dofs['UX'].value)
             dof_values_list.append(n.dofs['UY'].value)
 
+        #Converting list to array
+        self.dof_vec = np.array(dof_values_list)
+
+        #Reshaping
+        dof_vec_shape = (Element.num_dofs, 1)
+        self.dof_vec = np.reshape(self.dof_vec, newshape=dof_vec_shape)
+
     def compute_geometry(self):
         '''
         Method to compute the length and angle of the element
