@@ -7,13 +7,13 @@ class NewtonRaphson():
         #Storing a reference to the Truss object being solved
         self.truss = truss
 
-    def solve(self, num_increments, cnvrg_delta=1e-8):
+    def solve(self, num_increments=1, cnvrg_delta=1e-8):
         '''
         Function that implements the NewtonRaphson Scheme
 
         Inputs
-        num_increments - int - number of increments
-        cnvrg_delta - float - acceptable error in residue for convergence
+        num_increments - int - number of increments - default value: 1
+        cnvrg_delta - float - acceptable error in residue for convergence - default value: 1e-8
         '''
 
         #Set pseduo time to zero
