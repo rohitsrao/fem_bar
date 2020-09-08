@@ -94,4 +94,7 @@ class NewtonRaphson():
                 #Solve reduced system to get displacement for the current iteration
                 self.truss.solve_elastic()
 
+                #Update dofs after solving
+                self.truss.update_dofs()
+
                 break

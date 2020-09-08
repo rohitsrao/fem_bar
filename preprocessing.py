@@ -940,3 +940,6 @@ class Truss():
                     #dof_id's index in self.active_dofs
                     row = self.active_dofs.index(dof.id)
                     dof.value = self.u[row, 0]
+
+
+
