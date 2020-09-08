@@ -80,4 +80,11 @@ class NewtonRaphson():
                 #Apply residue to nodes
                 self.truss.apply_residue_to_nodes(res_vec)
 
+                #Generate reduced stiffness matrix and reduced load vector
+                self.truss.assemble_reduced_stiffness()
+                self.truss.generate_reduced_force_vec()
+
+                #Solve reduced system to get displacement for the current iteration
+                self.truss.solve_elastic()
+
                 break
