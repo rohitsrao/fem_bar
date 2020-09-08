@@ -141,7 +141,6 @@ class Element():
         #Transform generated stiffness matrix
         self.transform_k_local_global()
 
-
     @classmethod
     def create_elements_from_csv(cls, f):
 
@@ -334,6 +333,21 @@ class Element():
         cls.T[2, 3] = -sp.sin(cls.phi)
         cls.T[3, 2] = sp.sin(cls.phi)
         cls.T[3, 3] = sp.cos(cls.phi)
+
+    def compute_dof_vec(self):
+        '''
+        Function to compute the degree of freedom vector of the element
+        '''
+
+        #Creating a list to store the the dof values
+        dof_values_list = []
+
+        #Looping through the nodes
+        for n in self.n.values():
+
+            #Append dof value to the list
+            dof_values_list.append(n.dofs['UX'].value)
+            dof_values_list.append(n.dofs['UY'].value)
 
     def compute_geometry(self):
         '''

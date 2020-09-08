@@ -97,4 +97,10 @@ class NewtonRaphson():
                 #Update dofs after solving
                 self.truss.update_dofs()
 
+                #Looping through elements
+                for e in self.truss.edict.values():
+
+                    #Compute the degree of freedom vector
+                    e.compute_dof_vec()
+
                 break
