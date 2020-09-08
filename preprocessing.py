@@ -773,6 +773,9 @@ class Truss():
             #Apply BC
             BC(n_id, comp, value)
 
+        #Save a reference to the list of nodes with BC in Truss object
+        self.dof_ids = BC.dof_ids
+
     def apply_loads_from_csv(self, f):
         '''
         This method applies loads at nodes from csv
