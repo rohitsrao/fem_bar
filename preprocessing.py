@@ -848,8 +848,8 @@ class Truss():
                 #self.active_dofs where the dof_id appears.
                 if d.id in self.active_dofs:
 
-                    row = self.active_dofs.index(dof.id)
-                    n.apply_load_by_dof_id(dof.id, res_vec[row, 0])
+                    row = self.active_dofs.index(d.id)
+                    n.apply_load_by_dof_id(d.id, res_vec[row, 0])
 
     def compute_active_dofs(self):
         '''
