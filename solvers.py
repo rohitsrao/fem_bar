@@ -30,13 +30,12 @@ class NewtonRaphson():
         n = 0
 
         #Initializing a reduced internal force vector
-        int_force = np.zeros(shape=self.reduced_dimension)
+        int_force_shape = (self.truss.reduced_dimension, 1)
+        int_force = np.zeros(shape=int_force_shape)
 
         print('t: {}'.format(t))
         print('delta_t: {}'.format(delta_t))
         print('n: {}'.format(n))
-        print('num_nodes_total: {}'.format(num_nodes_total))
-        print('num_nodes_bc: {}'.format(num_nodes_bc))
         print('int_force')
         print(int_force)
         print()
