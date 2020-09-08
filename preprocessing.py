@@ -824,6 +824,31 @@ class Truss():
         #Deleting dataframe
         del df
 
+    def apply_residue_to_nodes(self, res_vec):
+        '''
+        Needed for NewtonRaphson solver. It takes the components
+        of the residual vector and applies them to the appropriate
+        nodal dofs
+
+        Inputs
+        res_vec - residual vector
+        '''
+
+        #Looping through the nodes
+        for n in self.ndict.values():
+
+            #Looping through the dofs
+            for d in n.dofs.values():
+
+                #If the dof is an active dof then update load value
+                #from residue vector. 
+                #The row for the residue vector will be the index in
+                #self.active_dofs where the dof_id appears.
+                if dof.id in self.active_dofs:
+
+                    row = self.active_dofs.index(dof.id)
+                    n.apply_load_by_dof_id(dof.id, res_vec[row, 0])
+
     def compute_active_dofs(self):
         '''
         Generating a list of active dofs. Active dof_ids are those dofs where no boundary
@@ -839,6 +864,14 @@ class Truss():
 
         #Compute the dimension of the reduced stiffness matrix
         self.reduced_dimension = self.global_dimension - len(self.bc_dof_ids)
+
+
+        #Converting list to an array
+        self.Fr = np.array(reduced_force_list)
+
+        #Reshaping
+        Fr_shape = (self.reduced_dimension, 1)
+        self.Fr = np.reshape(self.Fr, newshape=Fr_shape)
 
     def generate_reduced_force_vec(self):
         '''
@@ -862,13 +895,6 @@ class Truss():
                         reduced_force_list.append(n.loads['FX'].value)
                     if dof.symbol == 'UY':
                         reduced_force_list.append(n.loads['FY'].value)
-
-        #Converting list to an array
-        self.Fr = np.array(reduced_force_list)
-
-        #Reshaping
-        Fr_shape = (self.reduced_dimension, 1)
-        self.Fr = np.reshape(self.Fr, newshape=Fr_shape)
 
     def prep_for_solving(self):
         '''
@@ -897,6 +923,8 @@ class Truss():
         #Updating the reduced displacement vector
         self.u += self.du
 
+                    row = self.active_dofs.index(dof.id)
+
     def update_dofs(self):
         '''
         This method is to update the dof values after solve_elastic() has successfully run
@@ -915,4 +943,3 @@ class Truss():
                     #corresponding value from the solution vector. The index of the
                     #corresponding term in the solution vector is determined from the 
                     #dof_id's index in self.active_dofs
-                    row = self.active_dofs.index(dof.id)
