@@ -678,6 +678,13 @@ class Node():
         '''
         self.loads[comp].value = float(value)
 
+    def apply_load_by_id(self, load_id, value):
+        '''
+        sets value for the load at the nodes but uses
+        load id to index them
+        '''
+        self.loads_by_ids[load_id].value = value
+
 
 #Class for Truss
 class Truss():
