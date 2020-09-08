@@ -65,5 +65,11 @@ class NewtonRaphson():
 
             #ITERATION LOOP
             while res_norm > cnvrg_delta:
-                print("boo yeah")
+
+                #Increment iteration counter
+                i += 1
+
+                #Print iteration number
+                print('Iteration: {}'.format(i))
+                
                 break
