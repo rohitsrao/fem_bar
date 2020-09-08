@@ -16,6 +16,7 @@
 import pandas as pd
 
 from preprocessing import *
+from solvers import NewtonRaphson
 
 #Intialising
 Element.stiffness_integrand_generator()
@@ -59,3 +60,4 @@ truss.prep_for_solving()
 truss.solve_elastic()
 truss.update_dofs()
 Node.display_nodes()
+
