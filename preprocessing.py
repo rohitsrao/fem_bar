@@ -814,7 +814,7 @@ class Truss():
         '''
 
         #Compute the dimension of the reduced stiffness matrix
-        self.reduced_dimension = self.global_dimension - len(BC.dof_ids)
+        self.reduced_dimension = self.global_dimension - len(self.bc_dof_ids)
 
     def generate_reduced_force_vec(self):
         '''
