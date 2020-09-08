@@ -380,7 +380,7 @@ class Element():
         '''
 
         #Substitute the angle of the element to get transformation matrix for current element
-        T_inv = cls.T_inv.subs(phi, self.theta)
+        T_inv = Element.T_inv.subs(Element.phi, self.theta)
 
         #Convert from sympy to numpy array
         T_inv = np.asarray(T_inv).astype(np.float64)
@@ -437,6 +437,12 @@ class Element():
         This function computes the strain in the element at the gauss point
         '''
 
+
+            #Converting to numpy
+            eps = np.asarray(eps).astype(np.float64)
+
+            #Adding strain value to the list
+            self.eps_gp_list.append(eps[0, 0])
 
 
 

@@ -103,4 +103,7 @@ class NewtonRaphson():
                     #Compute the degree of freedom vector
                     e.compute_dof_vec()
 
+                    #Transform global displacements into axial displacements
+                    e.compute_axial_displacements()
+
                 break
