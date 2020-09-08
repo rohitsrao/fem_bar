@@ -572,9 +572,17 @@ class Node():
         #belonging to current node
         self.loads = {}
 
+        #Creating a dictionary to store loads with load_id
+        #being the keys
+        self.loads_by_ids = {}
+
         #Initializing applied forces at this node
         self.loads['FX'] = Load(symbol='FX')
         self.loads['FY'] = Load(symbol='FY')
+
+        #Adding to the loads_by_ids dictionary
+        self.loads_by_ids[self.loads['FX'].id] = self.loads['FX']
+        self.loads_by_ids[self.loads['FY'].id] = self.loads['FY']
 
         #Adding the created node to ndict
         Node.ndict[self.id] = self
@@ -669,6 +677,7 @@ class Node():
         comp is a string
         '''
         self.loads[comp].value = float(value)
+
 
 #Class for Truss
 class Truss():
