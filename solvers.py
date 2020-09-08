@@ -72,4 +72,9 @@ class NewtonRaphson():
                 #Print iteration number
                 print('Iteration: {}'.format(i))
                 
+                #Loop through each element of the truss and 
+                #compute the element stiffness matrix
+                for e in self.truss.edict.values():
+                    e.generate_stiffness_matrix()
+
                 break
