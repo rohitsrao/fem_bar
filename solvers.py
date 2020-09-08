@@ -26,15 +26,16 @@ class NewtonRaphson():
         #number of increments
         n = 0
 
-        #Computing shape of reduced internal force vector
-        num_nodes_total = len(self.truss.ndict)
-        num_nodes_bc = len(self.truss.bc_dof_ids)
+        #Initializing a reduced internal force vector
+        int_force = np.zeros(shape=self.reduced_dimension)
 
         print('t: {}'.format(t))
         print('delta_t: {}'.format(delta_t))
         print('n: {}'.format(n))
         print('num_nodes_total: {}'.format(num_nodes_total))
         print('num_nodes_bc: {}'.format(num_nodes_bc))
+        print('int_force')
+        print(int_force)
         print()
 
 
