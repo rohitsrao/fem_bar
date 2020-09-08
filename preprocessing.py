@@ -189,6 +189,28 @@ class Element():
         del df
 
     @classmethod
+    def define_symbolic_variables(cls):
+        '''
+        This method defines all the symbolic variables needed to generate
+        all the quantities in Element.symbolic_quantities_generator()
+        '''
+
+        #Natural Coordinate
+        cls.xi = sp.symbols('xi')
+
+        #Material and geometry
+        cls.E = sp.symbols('E')
+        cls.L = sp.symbols('L')
+        cls.A = sp.symbols('A')
+
+        #Degrees of freedom of bar element
+        cls.u1 = sp.symbols('u1')
+        cls.u2 = sp.symbols('u2')
+
+        #Defining Jacobian Matrix
+        cls.J = sp.Matrix([[0.5*cls.L]])
+
+    @classmethod
     def display_elements(cls):
 
         #Defining column widths and padding
@@ -265,21 +287,6 @@ class Element():
     @classmethod
     def stiffness_integrand_generator(cls):
 
-        #Natural Coordinate
-        cls.xi = sp.symbols('xi')
-
-        #Material and geometry
-        cls.E = sp.symbols('E')
-        cls.L = sp.symbols('L')
-        cls.A = sp.symbols('A')
-
-        #Degrees of freedom of bar element
-        cls.u1 = sp.symbols('u1')
-        cls.u2 = sp.symbols('u2')
-
-        #Defining Jacobian Matrix
-        cls.J = sp.Matrix([[0.5*cls.L]])
-
         #Field Variable
         u = sp.symbols('u')
 
@@ -340,6 +347,9 @@ class Element():
         This method generates all the symbolic quantities needed.
         These include the stiffness matrix integrand, dof_vec, strain, stress
         '''
+
+        #Define necessary symbolic variables
+        cls.define_symbolic_variables()
 
         #Generate the integrand for calculating stiffness matrix
         cls.stiffness_integrand_generator()
