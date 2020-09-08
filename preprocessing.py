@@ -334,6 +334,25 @@ class Element():
         #Defining the integrand
         cls.integrand = cls.E*cls.A*(cls.Bt.T*cls.Bt)*cls.J.det()
 
+    @classmethod
+    def symbolic_quantities_generator(cls):
+        '''
+        This method generates all the symbolic quantities needed.
+        These include the stiffness matrix integrand, dof_vec, strain, stress
+        '''
+
+        #Generate the integrand for calculating stiffness matrix
+        cls.stiffness_integrand_generator()
+
+        #Symbolic element degree of freedom vector
+        cls.dof_vec_sym = sp.Matrix([[cls.u1], [cls.u2]])
+
+        #Symbolic strain vector
+        cls.eps_sym = cls.Bt*cls.dof_vec_sym
+
+        #Symbolic stress vector
+        cls.sig_sym = cls.E*cls.eps_sym
+
     def compute_dof_vec(self):
         '''
         Function to compute the degree of freedom vector of the element
