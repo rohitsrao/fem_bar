@@ -808,6 +808,14 @@ class Truss():
         #Deleting dataframe
         del df
 
+    def compute_active_dofs(self):
+        '''
+        Generating a list of active dofs. Active dof_ids are those dofs where no boundary
+        condition has been specified. 
+        '''
+
+        self.active_dofs = [i for i in DOF.dof_ids if i not in BC.dof_ids] 
+
     def compute_reduced_dimension(self):
         '''
         Function computes the dimension of the reduced stiffness matrix and load vector
@@ -852,14 +860,15 @@ class Truss():
         needed for solving
         '''
 
-        #Generating a list of active dofs. Active dof_ids are those dofs where no boundary
-        #condition has been specified. 
-        self.active_dofs = [i for i in DOF.dof_ids if i not in BC.dof_ids] 
+        #Computing the active dofs
+        self.compute_active_dofs()
 
         #Initialize a reduced displacement vector with zeros to store the values
         #of displacment vector at the active dofs
         u_shape = (self.reduced_dimension, 1)
         self.u = np.zeros(shape=u_shape)
+
+        dof.value = self.u[row, 0]
 
     def solve_elastic(self):
         '''
@@ -891,4 +900,3 @@ class Truss():
                     #corresponding term in the solution vector is determined from the 
                     #dof_id's index in self.active_dofs
                     row = self.active_dofs.index(dof.id)
-                    dof.value = self.u[row, 0]
