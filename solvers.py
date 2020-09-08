@@ -106,4 +106,8 @@ class NewtonRaphson():
                     #Transform global displacements into axial displacements
                     e.compute_axial_displacements()
 
+                    #Compute the strain in the element
+                    e.compute_strain()
+
+
                 break

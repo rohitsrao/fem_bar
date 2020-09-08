@@ -433,19 +433,30 @@ class Element():
         #Converting angle to degrees for display
         self.theta_deg = np.degrees(self.theta)
 
+    def compute_strain(self):
         '''
-        This function computes the strain in the element at the gauss point
+        This method computes the element strain at all the gauss points
         '''
 
+        #Looping through all gauss points
+        for i in range(len(self.gp)):
+            
+            #Extracting the natural coordinate of the gauss point
+            xi_val = self.gp[i]
+
+            #Defining a list of values that will be used for substitution
+            sub_list = [(Element.xi, xi_val), (Element.L, self.L),
+                        (Element.u1, self.u_axial[0, 0]),
+                        (Element.u2, self.u_axial[2, 0])]
+
+            #Substituting in symbolic strain
+            eps = Element.eps_sym.subs(sub_list)
 
             #Converting to numpy
             eps = np.asarray(eps).astype(np.float64)
 
             #Adding strain value to the list
             self.eps_gp_list.append(eps[0, 0])
-
-
-
 
     def gauss_integrator(self, integrand):
         '''
