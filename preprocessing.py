@@ -908,7 +908,6 @@ class Truss():
         u_shape = (self.reduced_dimension, 1)
         self.u = np.zeros(shape=u_shape)
 
-        dof.value = self.u[row, 0]
 
     def solve_elastic(self):
         '''
@@ -940,3 +939,4 @@ class Truss():
                     #corresponding term in the solution vector is determined from the 
                     #dof_id's index in self.active_dofs
                     row = self.active_dofs.index(dof.id)
+                    dof.value = self.u[row, 0]
