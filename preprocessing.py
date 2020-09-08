@@ -367,6 +367,24 @@ class Element():
         #Symbolic stress vector
         cls.sig_sym = cls.E*cls.eps_sym
 
+    def compute_axial_displacements(self):
+        '''
+        This method is basically to compute the axial displacements of the element.
+        The degrees of freedom of a node are in global coordinates i.e UX and UY
+        The element formulation is with axial displacements u1 and u2 for both nodes.
+        Hence we need to apply the transformation u = T_inv*U
+        '''
+
+        #Substitute the angle of the element to get transformation matrix for current element
+        T_inv = cls.T_inv.subs(phi, self.theta)
+
+        #Convert from sympy to numpy array
+        T_inv = np.asarray(T_inv).astype(np.float64)
+
+        #Compute the axial dispalcement vector by inverse transform
+        self.u_axial = np.matmul(T_inv, self.U)
+
+
     def compute_dof_vec(self):
         '''
         Function to compute the degree of freedom vector of the element
