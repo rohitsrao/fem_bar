@@ -111,6 +111,9 @@ class Element():
         self.gp = [0]
         self.w = [2]
 
+        #Defining an empty list to store strains at gauss points
+        self.eps_gp_list = []
+
         #Creating a dictionary to store nodes belonging to an element
         self.n = {}
 
@@ -373,6 +376,7 @@ class Element():
         The degrees of freedom of a node are in global coordinates i.e UX and UY
         The element formulation is with axial displacements u1 and u2 for both nodes.
         Hence we need to apply the transformation u = T_inv*U
+        U here corresponds to self.dof_vec
         '''
 
         #Substitute the angle of the element to get transformation matrix for current element
@@ -382,8 +386,7 @@ class Element():
         T_inv = np.asarray(T_inv).astype(np.float64)
 
         #Compute the axial dispalcement vector by inverse transform
-        self.u_axial = np.matmul(T_inv, self.U)
-
+        self.u_axial = np.matmul(T_inv, self.dof_vec)
 
     def compute_dof_vec(self):
         '''
@@ -433,6 +436,7 @@ class Element():
         '''
         This function computes the strain in the element at the gauss point
         '''
+
 
 
 
