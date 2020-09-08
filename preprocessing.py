@@ -685,7 +685,6 @@ class Node():
         '''
         self.loads_by_dof_ids[dof_id].value = value
 
-
 #Class for Truss
 class Truss():
 
@@ -792,6 +791,9 @@ class Truss():
         #Compute the reduced dimension
         self.compute_reduced_dimension()
 
+        #Compute active dofs
+        self.compute_active_dofs()
+
     def apply_loads_from_csv(self, f):
         '''
         This method applies loads at nodes from csv
@@ -865,7 +867,6 @@ class Truss():
         #Compute the dimension of the reduced stiffness matrix
         self.reduced_dimension = self.global_dimension - len(self.bc_dof_ids)
 
-
     def generate_reduced_force_vec(self):
         '''
         This method generates the reduced force vector
@@ -901,9 +902,6 @@ class Truss():
         This method is to compute some basic parameters and initiliaze variables
         needed for solving
         '''
-
-        #Computing the active dofs
-        self.compute_active_dofs()
 
         #Initialize a reduced displacement vector with zeros to store the values
         #of displacment vector at the active dofs
