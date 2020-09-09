@@ -370,8 +370,6 @@ class Element():
         #Symbolic strain vector
         cls.eps_sym = cls.Bt*cls.dof_vec_sym
 
-        #Symbolic stress vector
-        cls.sig_sym = cls.E*cls.eps_sym
 
     def compute_axial_displacements(self):
         '''
@@ -474,7 +472,6 @@ class Element():
 
             #Compute stress at gp using polynomial from material model
             self.sig_gp_arr = self.mat.sig_poly(strain_at_gp)
-
 
     def gauss_integrator(self, integrand):
         '''
