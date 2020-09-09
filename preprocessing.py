@@ -651,6 +651,28 @@ class Material():
 
                 self.yp = kwargs['yp']
 
+    @classmethod
+    def display_material_data(cls):
+
+        #Looping through all the materials created
+        for mat in cls.mat_dict.values():
+
+            print('Material: {}'.format(mat.name))
+            print('--------------------------------------------------------------')
+            print('Young\'s Modulus: {}'.format(mat.E))
+
+            if hasattr(mat, 'yp'):
+                print('Yield point: {}'.format(mat.yp))
+
+            print()
+
+            if hasattr(mat, 'sig_poly'):
+                print('Stress strain polynomial in plastic region: ')
+                print(mat.sig_poly)
+                print()
+                print('Tangent Modulus: ')
+                print(mat.Et)
+                print()
 
 
 #Class for Node
