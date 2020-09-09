@@ -109,5 +109,8 @@ class NewtonRaphson():
                     #Compute the strain in the element
                     e.compute_strain()
 
+                    #Perform yield check to update Et value if yielded
+                    e.yield_check()
+
 
                 break
