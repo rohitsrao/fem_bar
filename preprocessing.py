@@ -644,7 +644,7 @@ class Material():
                 self.sig_poly = kwargs['sig_poly']
 
                 #Computing tangent modulus
-                self.Et = sig_poly.deriv()
+                self.Et = self.sig_poly.deriv()
 
             #Storing the yield point
             if 'yp' in kwargs.keys():
