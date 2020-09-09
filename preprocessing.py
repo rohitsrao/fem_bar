@@ -461,6 +461,19 @@ class Element():
             #Adding strain value to the list
             self.eps_gp_arr[i] = eps[0, 0]
 
+    def compute_stress(self):
+        '''
+        This method computes the stress in all gauss points in an element
+        '''
+
+        #Loop through all the gauss points
+        for i in range(len(self.gp)):
+
+            #Extract strain at current gauss point
+            strain_at_gp = self.eps_gp_arr[i]
+
+            #Compute stress at gp using polynomial from material model
+            self.sig_gp_arr = self.mat.sig_poly(strain_at_gp)
 
 
     def gauss_integrator(self, integrand):
