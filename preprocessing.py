@@ -107,6 +107,9 @@ class Element():
         #Setting the area of the element
         self.A = A
 
+        #Defining a vector of axial displacements of the element
+        self.u_axial = np.zeros(shape=(Element.num_dofs, 1))
+
         #Defining weights and points for gauss integration
         self.gp = [0]
         self.w = [2]
@@ -439,6 +442,14 @@ class Element():
         #Converting angle to degrees for display
         self.theta_deg = np.degrees(self.theta)
 
+    def compute_internal_force(self):
+        '''
+        This method computes the internal force vector for the element. 
+        '''
+
+        #Computing the internal force using gauss integration
+        self.int_force = self.gauss_integrator(self.int_force_integrand) 
+
     def compute_strain(self):
         '''
         This method computes the element strain at all the gauss points
@@ -493,7 +504,17 @@ class Element():
         #Looping through number of gauss points
         for i in range(len(self.gp)):
 
-            sub_list = [(Element.xi, self.gp[i]), (Element.E, Et_val_list[i])]
+            #Extracting value of Et and natural coordinate at gauss point
+            Et_val_at_gp = Et_val_list[i]
+            xi_val = self.gp[i]
+
+            sub_list = [(Element.E, Et_val_at_gp),
+                        (Element.xi, xi_val),
+                        (Element.L, self.L),
+                        (Element.A, self.A),
+                        (Element.u1, self.u_axial[0, 0]),
+                        (Element.u2, self.u_axial[2, 0])]
+
             gauss_integral = self.w[i]*integrand.subs(sub_list)
             gauss_integrals.append(gauss_integral)
 
@@ -622,15 +643,13 @@ class Element():
 
             #If material has yielded at gauss point set the tangent modulus to updated value
             if strain_at_gp >= self.mat.yp:
-
                 Et_val_list.append(self.mat.Et(strain_at_gp))
-
             #else set tangent modulus to be Young's Modulus
             else:
-
                 Et_val_list.append(self.mat.E)
 
         return Et_val_list
+
 
 #Class for Load
 class Load():
