@@ -111,11 +111,11 @@ class Element():
         self.gp = [0]
         self.w = [2]
 
-        #Defining a list to store strains at gauss points
-        self.eps_gp_list = [0.0]
+        #Defining an array to store strains at gauss points
+        self.eps_gp_arr = np.zeros(shape=(len(self.gp)))
 
         #Defining a list to store stresses at gauss points
-        self.sig_gp_list = [0.0]
+        self.sig_gp_arr = np.zeros(shape=(len(self.gp)))
 
         #Creating a dictionary to store nodes belonging to an element
         self.n = {}
@@ -459,7 +459,7 @@ class Element():
             eps = np.asarray(eps).astype(np.float64)
 
             #Adding strain value to the list
-            self.eps_gp_list.append(eps[0, 0])
+            self.eps_gp_arr[i] = eps[0, 0]
 
 
 
@@ -600,10 +600,10 @@ class Element():
         Et_val_list = []
 
         #Looping through the list containing strain values at the gauss points
-        for i in range(len(self.eps_gp_list)):
+        for i in range(self.eps_gp_arr.shape[0]):
 
             #Extracting strain value at a single gauss point
-            strain_at_gp = self.eps_gp_list[i]
+            strain_at_gp = self.eps_gp_arr[i]
 
             #If material has yielded at gauss point set the tangent modulus to updated value
             if strain_at_gp >= self.mat.yp:
