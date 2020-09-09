@@ -115,5 +115,8 @@ class NewtonRaphson():
                     #Compute stresses at gauss points
                     e.compute_stress()
 
+                    #Compute internal force in element
+                    e.compute_internal_force()
+
 
                 break
