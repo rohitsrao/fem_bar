@@ -114,6 +114,9 @@ class Element():
         #Defining a list to store strains at gauss points
         self.eps_gp_list = [0.0]
 
+        #Defining a list to store stresses at gauss points
+        self.sig_gp_list = [0.0]
+
         #Creating a dictionary to store nodes belonging to an element
         self.n = {}
 
@@ -457,6 +460,8 @@ class Element():
 
             #Adding strain value to the list
             self.eps_gp_list.append(eps[0, 0])
+
+
 
     def gauss_integrator(self, integrand):
         '''
