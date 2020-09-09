@@ -111,8 +111,8 @@ class Element():
         self.gp = [0]
         self.w = [2]
 
-        #Defining an empty list to store strains at gauss points
-        self.eps_gp_list = []
+        #Defining a list to store strains at gauss points
+        self.eps_gp_list = [0.0]
 
         #Creating a dictionary to store nodes belonging to an element
         self.n = {}
@@ -467,10 +467,13 @@ class Element():
         #Defining a list to store the gauss integrals
         gauss_integrals = []
 
+        #Generating Et_values through yield check
+        Et_val_list = self.yield_check()
+
         #Looping through number of gauss points
         for i in range(len(self.gp)):
 
-            sub_list = [(Element.xi, self.gp[i])]
+            sub_list = [(Element.xi, self.gp[i]), (Element.E, Et_val_list[i])]
             gauss_integral = self.w[i]*integrand.subs(sub_list)
             gauss_integrals.append(gauss_integral)
 
@@ -553,8 +556,7 @@ class Element():
         self.k_local_1d_s = self.gauss_integrator(Element.integrand)
 
         #Convert from symbolic matrix into numpy matrix
-        sub_list = [(Element.E, self.mat.E), 
-                    (Element.L, self.L),
+        sub_list = [(Element.L, self.L),
                     (Element.A, self.A)]
         self.k_local_1d = self.k_local_1d_s.subs(sub_list)
         self.k_local_1d = np.array(self.k_local_1d).astype(np.float64)
@@ -583,6 +585,33 @@ class Element():
         temp = np.matmul(self.k_local_2d, np.linalg.inv(self.T))
         self.k_global_2d = np.matmul(self.T, temp)
 
+    def yield_check(self):
+        '''
+        This function checks if the material has yielded at the gauss points.
+        It returns a list of values for Et
+        '''
+
+        #Creating an empty list to store the Et values and which will be returned
+        Et_val_list = []
+
+        #Looping through the list containing strain values at the gauss points
+        for i in range(len(self.eps_gp_list)):
+
+            #Extracting strain value at a single gauss point
+            strain_at_gp = self.eps_gp_list[i]
+
+            #If material has yielded at gauss point set the tangent modulus to updated value
+            if strain_at_gp >= self.mat.yp:
+
+                Et_val_list.append(self.mat.Et(strain_at_gp))
+
+            #else set tangent modulus to be Young's Modulus
+            else:
+
+                Et_val_list.append(self.mat.E)
+
+        return Et_val_list
+
 #Class for Load
 class Load():
 
@@ -590,7 +619,6 @@ class Load():
    #Keeps count of number of loads created
    #counter value serves as Load ID
    count = 0
-
    def __init__(self, symbol, value=0.0):
        '''
        Initializer for the load class
@@ -673,7 +701,6 @@ class Material():
                 print('Tangent Modulus: ')
                 print(mat.Et)
                 print()
-
 
 #Class for Node
 class Node():
