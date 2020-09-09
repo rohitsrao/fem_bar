@@ -373,6 +373,9 @@ class Element():
         #Symbolic stress vector
         cls.sig_sym = cls.E*cls.eps_sym
 
+        #Symbolic internal force integrand
+        cls.int_force_integrand = cls.Bt.T*cls.sig_sym
+
     def compute_axial_displacements(self):
         '''
         This method is basically to compute the axial displacements of the element.
