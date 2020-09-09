@@ -619,7 +619,7 @@ class Material():
     mat_dict = {}
 
     #Initializer
-    def __init__(self, name, E):
+    def __init__(self, name, E, **kwargs):
 
         #Setting name of the material
         self.name = name
@@ -630,6 +630,28 @@ class Material():
 
         #Adding material object to dictionary
         Material.mat_dict[self.name] = self
+
+        #If **kwargs dictionary is not empty
+        if kwargs:
+
+            #Storing the stress strain polynomial in the plastic region
+            #as sig_poly and also calculating the expression for Tangent
+            #Modulus as the derivative of sig_poly. Please note sig_poly
+            #is a function of nominal values and is a function of the 
+            #total strain and not just plastic strain
+            if 'sig_poly' in kwargs.keys():
+
+                self.sig_poly = kwargs['sig_poly']
+
+                #Computing tangent modulus
+                self.Et = sig_poly.deriv()
+
+            #Storing the yield point
+            if 'yp' in kwargs.keys():
+
+                self.yp = kwargs['yp']
+
+
 
 #Class for Node
 class Node():
