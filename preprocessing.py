@@ -141,6 +141,9 @@ class Element():
         #Computing element geometry
         self.compute_geometry()
 
+        #Set the transformation matrix for the element
+        self.set_transformation_matrix()
+
         #Compute the global indices of the element
         self.generate_global_indices()
 
@@ -271,7 +274,7 @@ class Element():
             e.mat = mat
 
     @classmethod
-    def set_transformation_matrix_sym(cls):
+    def generate_transformation_matrix_sym(cls):
         '''
         This method is to set the symbolic transformation matrix
         to relate quantities from the local coordinate system to the
@@ -388,14 +391,8 @@ class Element():
         U here corresponds to self.dof_vec
         '''
 
-        #Substitute the angle of the element to get transformation matrix for current element
-        T_inv = Element.T_inv.subs(Element.phi, self.theta)
-
-        #Convert from sympy to numpy array
-        T_inv = np.asarray(T_inv).astype(np.float64)
-
         #Compute the axial dispalcement vector by inverse transform
-        self.u_axial = np.matmul(T_inv, self.dof_vec)
+        self.u_axial = np.matmul(self.T_inv, self.dof_vec)
 
     def compute_dof_vec(self):
         '''
@@ -447,8 +444,18 @@ class Element():
         This method computes the internal force vector for the element. 
         '''
 
-        #Computing the internal force using gauss integration
-        self.int_force = self.gauss_integrator(self.int_force_integrand) 
+        #Computing the internal force using gauss integration for the axial direction
+        temp = self.gauss_integrator(self.int_force_integrand) 
+
+        #This is a (2, 1) vector of only axial forces f1 and f2
+        #We need to add 0s for the vertical component of forces
+        self.int_force_axial = np.zeros(shape=(Element.num_dofs, 1))
+        self.int_force_axial[0, 0] = temp[0, 0]
+        self.int_force_axial[2, 0] = temp[1, 0]
+
+        #Transforming the axial component to get the internal force in truss system
+        self.int_force = np.matmul(self.T, self.int_force_axial)
+
 
     def compute_strain(self):
         '''
@@ -611,10 +618,11 @@ class Element():
         self.k_local_2d[2, 0] = self.k_local_1d[1, 0]
         self.k_local_2d[2, 2] = self.k_local_1d[1, 1]
 
-    def transform_k_local_global(self):
+    def set_transformation_matrix(self):
         '''
-        This method transforms the 2D stiffness matrix from the local coordinate
-        system to the global coordinate system
+        This method is called from the initializer for Element class and 
+        basically substitutes the values of angles in the symbolic T matrix
+        and computes the T matrix and its inverse for the element
         '''
 
         #Computing the transformation matrix for element
@@ -622,8 +630,18 @@ class Element():
         self.T = Element.T.subs(Element.phi, self.theta)
         self.T = np.array(self.T).astype(np.float64)
 
+        #Computing the inverse of the transformation matrix
+        self.T_inv = Element.T_inv.subs(Element.phi, self.theta)
+        self.T_inv = np.array(self.T).astype(np.float64)
+
+    def transform_k_local_global(self):
+        '''
+        This method transforms the 2D stiffness matrix from the local coordinate
+        system to the global coordinate system
+        '''
+
         #Transforming the 2d local stiffness matrix to 2d global stiffness matrix
-        temp = np.matmul(self.k_local_2d, np.linalg.inv(self.T))
+        temp = np.matmul(self.k_local_2d, self.T_inv)
         self.k_global_2d = np.matmul(self.T, temp)
 
     def yield_check(self):
@@ -649,7 +667,6 @@ class Element():
                 Et_val_list.append(self.mat.E)
 
         return Et_val_list
-
 
 #Class for Load
 class Load():
@@ -934,6 +951,33 @@ class Truss():
 
                     self.K[gi, gj] += e.k_local_2d[i, j]
 
+    def assemble_internal_force(self):
+        '''
+        This method loops through each element and assembles the global and then
+        the reduced internal force vector
+        '''
+
+        #Initialising a global internal force vector to be zero
+        global_int_force_shape = (self.global_dimension, 1)
+        self.global_int_force = np.zeros(shape=global_int_force_shape)
+
+        #Looping through each element
+        for e in self.edict.values():
+
+            #Looping through the dof_ids
+            for i in range(len(e.dof_ids)):
+
+                #Adding the corresponding component of the internal force vector
+                #to the proper position in the global internal force vector
+                #the dof_id becomes the row in the global internal force vector
+                #we need to subtract 1 as the dof ids are indexed from 1 but the arrays
+                #are indexed from 0
+                row = e.dof_ids[i]-1
+                self.global_int_force[row, 0] += e.int_force[i, 0]
+
+
+
+
     def assemble_reduced_stiffness(self):
         '''
         This method assembles the reduced stiffness matrix after the application of 
@@ -970,7 +1014,7 @@ class Truss():
 
                         #Adding to reduced stiffness matrix
                         self.Kr[gi, gj] += e.k_local_2d[i, j]
-        
+    
     def apply_bcs_from_csv(self, f):
         '''
         This method applies boundary conditions from a csv file
@@ -1117,7 +1161,6 @@ class Truss():
         #of displacment vector at the active dofs
         u_shape = (self.reduced_dimension, 1)
         self.u = np.zeros(shape=u_shape)
-
 
     def solve_elastic(self):
         '''

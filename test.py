@@ -20,7 +20,7 @@ from solvers import NewtonRaphson
 
 #Intialising
 Element.symbolic_quantities_generator()
-Element.set_transformation_matrix_sym()
+Element.generate_transformation_matrix_sym()
 
 #Creating a material
 sig_poly = np.poly1d([47940.7970, -20382.2400, 3018.3718, 94.0444])

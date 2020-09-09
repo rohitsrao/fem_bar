@@ -118,5 +118,8 @@ class NewtonRaphson():
                     #Compute internal force in element
                     e.compute_internal_force()
 
+                #Assemble the internal force vectors
+                self.truss.assemble_internal_force()
+
 
                 break
