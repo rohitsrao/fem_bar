@@ -3,6 +3,8 @@
 #Libraries
 import numpy as np
 
+from preprocessing import *
+
 class NewtonRaphson():
 
     def __init__(self, truss):
@@ -54,7 +56,7 @@ class NewtonRaphson():
 
             #Display current increment
             print('Increment: {}'.format(n))
-            print('Pseduo time: {}'.format(t))
+            print('Pseduo time: {:.4f}'.format(t))
             print('-------------------------')
 
             #Calculating the external force vector to be applied
@@ -128,7 +130,7 @@ class NewtonRaphson():
                 res_norm = np.linalg.norm(res_vec)
 
                 #Print Iteration number and residue
-                print('Iteration: {}    res_norm: {}'.format(i, res_norm))
+                print('Iteration: {}    res_norm: {:.4E}'.format(i, res_norm))
 
             #Print blank line at end of increment
             print()
