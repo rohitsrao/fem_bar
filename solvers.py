@@ -76,9 +76,6 @@ class NewtonRaphson():
                 #Increment iteration counter
                 i += 1
 
-                #Print iteration number
-                print('Iteration: {}'.format(i))
-                
                 #Loop through each element of the truss and 
                 #compute the element stiffness matrix
                 for e in self.truss.edict.values():
@@ -118,8 +115,21 @@ class NewtonRaphson():
                     #Compute internal force in element
                     e.compute_internal_force()
 
-                #Assemble the internal force vectors
+                #Assemble the internal force vector for the truss
                 self.truss.assemble_internal_force()
 
+                #Set the newton raphson int_force variable
+                int_force = self.truss.reduced_int_force
 
-                break
+                #Update residue vector
+                res_vec = ext_force - int_force
+
+                #Compute norm of residue vector
+                res_norm = np.linalg.norm(res_vec)
+
+                #Print Iteration number and residue
+                print('Iteration: {}    res_norm: {}'.format(i, res_norm))
+
+            #Print blank line at end of increment
+            print()
+
