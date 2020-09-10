@@ -975,6 +975,31 @@ class Truss():
                 row = e.dof_ids[i]-1
                 self.global_int_force[row, 0] += e.int_force[i, 0]
 
+        #Defining a list to store the internal forces only at active dofs
+        reduced_int_force_list = []
+
+        #Looping through the nodes
+        for n in self.ndict.values():
+
+            #Looping through the dofs in the node
+            for dof in n.dofs.values():
+
+                #If dof is an active dof
+                if dof.id in self.active_dofs:
+
+                    #Append force to the list
+                    #The force to append is indexed by the dof_id in self.global_int_force
+                    reduced_int_force_list.append(self.global_int_force[dof.id, 0])
+
+        #Convert the list to an array
+        self.reduced_int_force = np.array(reduced_int_force_list)
+
+        #Reshaping
+        reduced_int_force_shape = (self.reduced_dimension, 1)
+        self.reduced_int_force = np.reshape(self.reduced_int_force, newshape=reduced_int_force_shape)
+
+
+
 
 
 
