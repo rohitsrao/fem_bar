@@ -355,7 +355,7 @@ class Element():
         cls.Bt = onezero*gamma*DN
 
         #Defining the integrand
-        cls.integrand = cls.E*cls.A*(cls.Bt.T*cls.Bt)*cls.J.det()
+        cls.stiffness_integrand = cls.E*cls.A*(cls.Bt.T*cls.Bt)*cls.J.det()
 
     @classmethod
     def symbolic_quantities_generator(cls):
@@ -380,7 +380,7 @@ class Element():
         cls.sig_sym = cls.E*cls.eps_sym
 
         #Symbolic internal force integrand
-        cls.int_force_integrand = cls.Bt.T*cls.sig_sym
+        cls.int_force_integrand = cls.Bt.T*cls.sig_sym*cls.A*cls.L*0.5
 
     def compute_axial_displacements(self):
         '''
@@ -443,7 +443,6 @@ class Element():
         '''
         This method computes the internal force vector for the element. 
         '''
-
         #Computing the internal force using gauss integration for the axial direction
         temp = self.gauss_integrator(self.int_force_integrand) 
 
@@ -455,7 +454,6 @@ class Element():
 
         #Transforming the axial component to get the internal force in truss system
         self.int_force = np.matmul(self.T, self.int_force_axial)
-
 
     def compute_strain(self):
         '''
@@ -601,7 +599,7 @@ class Element():
         '''
 
         #Compute the symbolic 1d stiffness matrix
-        self.k_local_1d_s = self.gauss_integrator(Element.integrand)
+        self.k_local_1d_s = self.gauss_integrator(Element.stiffness_integrand)
 
         #Convert from symbolic matrix into numpy matrix
         sub_list = [(Element.L, self.L),
@@ -989,7 +987,9 @@ class Truss():
 
                     #Append force to the list
                     #The force to append is indexed by the dof_id in self.global_int_force
-                    reduced_int_force_list.append(self.global_int_force[dof.id, 0])
+                    #subtracting 1 from dof_id because array indexed from 0 but dof id indexed from 1
+                    index = dof.id-1
+                    reduced_int_force_list.append(self.global_int_force[index, 0])
 
         #Convert the list to an array
         self.reduced_int_force = np.array(reduced_int_force_list)
@@ -997,11 +997,6 @@ class Truss():
         #Reshaping
         reduced_int_force_shape = (self.reduced_dimension, 1)
         self.reduced_int_force = np.reshape(self.reduced_int_force, newshape=reduced_int_force_shape)
-
-
-
-
-
 
     def assemble_reduced_stiffness(self):
         '''
