@@ -922,6 +922,10 @@ class Truss():
         #Defining the dimension of the global stiffness matrix for the truss
         self.global_dimension = len(Node.ndict)*Node.num_dofs
         
+        #Defining a flag value to keep track of whether the total reduced force vector 
+        #has been generated.
+        self.total_reduced_force_has_been_generated = False
+
     def assemble_full_stiffness(self):
         '''
         Assembles the global stiffness matrix for the truss
@@ -1143,7 +1147,7 @@ class Truss():
 
     def generate_reduced_force_vec(self):
         '''
-        This method generates the reduced force vector
+        This method generates the reduced force vector useful when doing newton rapshon
         '''
         
         #Creating a list to store the forces applied on the DOFs without boundary condition
@@ -1170,6 +1174,14 @@ class Truss():
         #Reshaping
         Fr_shape = (self.reduced_dimension, 1)
         self.Fr = np.reshape(self.Fr, newshape=Fr_shape)
+        
+        #If the total reduced force has not been generated
+        #i.e this is the first function call to generate_reduced_force_vec()
+        if self.total_reduced_force_has_been_generated == False:
+         
+            #Set the calculated reduced force vector as Fr_total
+            self.Fr_total = self.Fr
+            self.total_reduced_force_has_been_generated = True
 
     def prep_for_solving(self):
         '''
@@ -1213,6 +1225,5 @@ class Truss():
                     #dof_id's index in self.active_dofs
                     row = self.active_dofs.index(dof.id)
                     dof.value = self.u[row, 0]
-
 
 

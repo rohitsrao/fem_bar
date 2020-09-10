@@ -61,7 +61,7 @@ class NewtonRaphson():
 
             #Calculating the external force vector to be applied
             #for this increment
-            ext_force = t*self.truss.Fr
+            ext_force = t*self.truss.Fr_total
 
             #Initialise residue vector for this incremenet
             res_vec = ext_force-int_force
@@ -132,6 +132,7 @@ class NewtonRaphson():
                 #Print Iteration number and residue
                 print('Iteration: {}    res_norm: {:.4E}'.format(i, res_norm))
 
+            Node.display_nodes()
             #Print blank line at end of increment
             print()
 

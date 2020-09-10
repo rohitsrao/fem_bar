@@ -44,13 +44,13 @@ Element.display_elements()
 truss = Truss()
 truss.assemble_full_stiffness()
 
-#Apply loads from csv
-f = './loads.csv'
-truss.apply_loads_from_csv(f)
-
 #Apply bcs from csv
 f = './bcs.csv'
 truss.apply_bcs_from_csv(f)
+
+#Apply loads from csv
+f = './loads.csv'
+truss.apply_loads_from_csv(f)
 
 #Elastic without NewtonRapshon
 #truss.assemble_reduced_stiffness()
