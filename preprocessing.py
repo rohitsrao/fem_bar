@@ -495,31 +495,21 @@ class Element():
         '''
         This method computes the stress in all gauss points in an element
         '''
-
+         
         #Loop through all the gauss points
         for i in range(len(self.gp)):
-
-            #Extract the strain value at the gauss point
-            eps_val = self.eps_gp_arr[i]
-
-            #
-
-            #Extract the tangent modulus at the current gauss point
-            Et_val = self.Et_values_at_gp[i]
-
-            #Defining a list of values that can be useful for substitution
-            sub_list = [(Element.E, Et_val),
-                        (Element.L, self.L),
-                        (Element.A, self.A),
-                        (Element.u1, self.u_axial[0, 0]),
-                        (Element.u2, self.u_axial[2, 0])]
-            
-            #Compute the stress at gauss point by substituting values in 
-            #symbolic stress vector
-            sig_s = Element.sig_sym.subs(sub_list)
          
-            #Compute stress at gp using polynomial from material model
-            self.sig_gp_arr = np.asarray(sig_s).astype(np.float64)
+            #Extract the strain value at the gauss point
+            eps_val_at_gp = self.eps_gp_arr[i]
+            
+            #Compute stress at the gauss point based on whether gauss point
+            #has yielded or not
+            #If gauss point has yielded use the stress strain polynomial in the plastic region
+            if self.yield_flags[i] == True:
+                self.sig_gp_arr[i] = self.mat.sig_poly(eps_val_at_gp)
+            #If the gauss point has not yielded then use standard Young's modulus
+            else:
+                self.sig_gp_arr[i] = self.mat.E*eps_val_at_gp
 
     def gauss_integrator(self, integrand):
         '''
