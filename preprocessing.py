@@ -487,8 +487,6 @@ class Element():
         #Check if gauss points have yielded after calculating strains
         self.yield_check()
 
-
-
     def compute_stress(self):
         '''
         This method computes the stress in all gauss points in an element
@@ -497,11 +495,22 @@ class Element():
         #Loop through all the gauss points
         for i in range(len(self.gp)):
 
-            #Extract strain at current gauss point
-            strain_at_gp = self.eps_gp_arr[i]
+            #Extract the tangent modulus at the current gauss point
+            Et_val = self.Et_values_at_gp[i]
 
+            #Defining a list of values that can be useful for substitution
+            sub_list = [(Element.E, Et_val),
+                        (Element.L, self.L),
+                        (Element.A, self.A),
+                        (Element.u1, self.u_axial[0, 0]),
+                        (Element.u2, self.u_axial[2, 0])]
+            
+            #Compute the stress at gauss point by substituting values in 
+            #symbolic stress vector
+            sig_s = Element.sig_sym.subs(sub_list)
+         
             #Compute stress at gp using polynomial from material model
-            self.sig_gp_arr = self.mat.sig_poly(strain_at_gp)
+            self.sig_gp_arr = np.asarray(sig_s).astype(np.float64)
 
     def gauss_integrator(self, integrand):
         '''
@@ -608,10 +617,7 @@ class Element():
         self.k_local_1d_s = self.gauss_integrator(Element.stiffness_integrand)
 
         #Convert from symbolic matrix into numpy matrix
-        sub_list = [(Element.L, self.L),
-                    (Element.A, self.A)]
-        self.k_local_1d = self.k_local_1d_s.subs(sub_list)
-        self.k_local_1d = np.array(self.k_local_1d).astype(np.float64)
+        self.k_local_1d = np.array(self.k_local_1d_s).astype(np.float64)
 
         #Converting this 1d stiffness matrix into a 2D with zeros
         #for the appropriate terms in the y-direction

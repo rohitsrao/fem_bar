@@ -114,9 +114,6 @@ class NewtonRaphson():
                     print('strain')
                     print(e.eps_gp_arr)
 
-                    #Perform yield check to update Et value if yielded
-                    e.yield_check()
-
                     #Compute stresses at gauss points
                     e.compute_stress()
                     print('stress')
