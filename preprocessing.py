@@ -451,17 +451,23 @@ class Element():
         '''
         This method computes the internal force vector for the element. 
         '''
-        #Computing the internal force using gauss integration for the axial direction
-        temp = self.gauss_integrator(self.int_force_integrand) 
-
-        #This is a (2, 1) vector of only axial forces f1 and f2
-        #We need to add 0s for the vertical component of forces
+        ##Computing the internal force using gauss integration for the axial direction
+        #temp = self.gauss_integrator(self.int_force_integrand) 
+        
+        ##This is a (2, 1) vector of only axial forces f1 and f2
+        ##We need to add 0s for the vertical component of forces
+        #self.int_force_axial = np.zeros(shape=(Element.num_dofs, 1))
+        #self.int_force_axial[0, 0] = temp[0, 0]
+        #self.int_force_axial[2, 0] = temp[1, 0]
+        
+        ##Transforming the axial component to get the internal force in truss system
+        #self.int_force = np.matmul(self.T, self.int_force_axial)
+        temp = self.sig_gp_arr[0]*self.A
         self.int_force_axial = np.zeros(shape=(Element.num_dofs, 1))
-        self.int_force_axial[0, 0] = temp[0, 0]
-        self.int_force_axial[2, 0] = temp[1, 0]
-
-        #Transforming the axial component to get the internal force in truss system
+        self.int_force_axial[0, 0] = -temp
+        self.int_force_axial[2, 0] = temp
         self.int_force = np.matmul(self.T, self.int_force_axial)
+
 
     def compute_strain(self):
         '''
