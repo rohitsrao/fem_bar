@@ -114,6 +114,10 @@ class Element():
         self.gp = [0]
         self.w = [2]
 
+        #Initialising a list to store the tangent stiffness values
+        #at the gauss points and initialising the value to be Young's Modulus
+        self.Et_values_at_gp = [self.mat.E]
+
         #Defining an array to store strains at gauss points
         self.eps_gp_arr = np.zeros(shape=(len(self.gp)))
 
@@ -479,6 +483,11 @@ class Element():
 
             #Adding strain value to the list
             self.eps_gp_arr[i] = eps[0, 0]
+         
+        #Check if gauss points have yielded after calculating strains
+        self.yield_check()
+
+
 
     def compute_stress(self):
         '''
@@ -503,14 +512,11 @@ class Element():
         #Defining a list to store the gauss integrals
         gauss_integrals = []
 
-        #Generating Et_values through yield check
-        Et_val_list = self.yield_check()
-
         #Looping through number of gauss points
         for i in range(len(self.gp)):
 
             #Extracting value of Et and natural coordinate at gauss point
-            Et_val_at_gp = Et_val_list[i]
+            Et_val_at_gp = self.Et_values_at_gp[i]
             xi_val = self.gp[i]
 
             sub_list = [(Element.E, Et_val_at_gp),
@@ -660,11 +666,19 @@ class Element():
             #If material has yielded at gauss point set the tangent modulus to updated value
             if strain_at_gp >= self.mat.yp:
                 Et_val_list.append(self.mat.Et(strain_at_gp))
+                print('material has yielded')
+                print('Et_val_list')
+                print(Et_val_list)
             #else set tangent modulus to be Young's Modulus
             else:
                 Et_val_list.append(self.mat.E)
+                print('material has not yielded')
+                print('Et_val_list')
+                print(Et_val_list)
+                
+        #Updating the list of Et values at the gauss points
+        self.Et_values_at_gp = Et_val_list
 
-        return Et_val_list
 
 #Class for Load
 class Load():
