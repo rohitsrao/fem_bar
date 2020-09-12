@@ -124,6 +124,10 @@ class Element():
         #Defining a list to store stresses at gauss points
         self.sig_gp_arr = np.zeros(shape=(len(self.gp)))
 
+        #Defining a list to store boolean values that indicate whether 
+        #material has yielded at gauss point
+        self.yield_flags = np.full(shape=(len(self.gp)), fill_value=False, dtype=bool)
+
         #Creating a dictionary to store nodes belonging to an element
         self.n = {}
 
@@ -495,6 +499,11 @@ class Element():
         #Loop through all the gauss points
         for i in range(len(self.gp)):
 
+            #Extract the strain value at the gauss point
+            eps_val = self.eps_gp_arr[i]
+
+            #
+
             #Extract the tangent modulus at the current gauss point
             Et_val = self.Et_values_at_gp[i]
 
@@ -670,14 +679,18 @@ class Element():
             strain_at_gp = self.eps_gp_arr[i]
 
             #If material has yielded at gauss point set the tangent modulus to updated value
+            #and also update the yield flag to True
             if strain_at_gp >= self.mat.yp:
                 Et_val_list.append(self.mat.Et(strain_at_gp))
+                self.yield_flags[i] = True
                 print('material has yielded')
                 print('Et_val_list')
                 print(Et_val_list)
             #else set tangent modulus to be Young's Modulus
+            #and the Yield Flag to be False
             else:
                 Et_val_list.append(self.mat.E)
+                self.yield_flags[i] = False
                 print('material has not yielded')
                 print('Et_val_list')
                 print(Et_val_list)
