@@ -1,6 +1,7 @@
 #This contains all classes for different kinds of solvers
 
 #Libraries
+import pandas as pd
 import numpy as np
 
 from preprocessing import *
@@ -41,6 +42,10 @@ class NewtonRaphson():
         #Calling Truss.prep_for_solving
         #Initialises certain things
         self.truss.prep_for_solving()
+
+        #List to store u1, u2, f2, k11
+        data_dump = []
+
 
         #INCREMENT LOOP
         #Applying loads until t=1
@@ -129,6 +134,22 @@ class NewtonRaphson():
                 #Print Iteration number and residue
                 print('Iteration: {}    res_norm: {:.4E}'.format(i, res_norm))
 
+            #Extract the stiffness information
+            tmp_u1 = self.truss.edict[1].dof_vec[0, 0]
+            tmp_u2 = self.truss.edict[1].dof_vec[2, 0]
+            tmp_f = self.truss.edict[1].int_force[2, 0]
+            tmp_k11 = self.truss.edict[1].k_local_2d[0, 0]
+            tmp_delu = tmp_u2-tmp_u1
+            tmp_fbydelu = tmp_f/tmp_delu
+            row = [tmp_u1, tmp_u2, tmp_f, tmp_k11, tmp_delu, tmp_fbydelu]
+            data_dump.append(row)
+
             #Print blank line at end of increment
             print()
 
+        #Converting data_dump list to pandas dataframe
+        df = pd.DataFrame(data_dump, columns=['u1', 'u2', 'f', 'k11', 'delta_u', 'f_by_delta_u'])
+
+        #Saving dataframe to csv
+        outfile = './data_dump_0.1N.csv'
+        df.to_csv(outfile, index=False)

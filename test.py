@@ -65,6 +65,6 @@ truss.apply_loads_from_csv(str_dir+f)
 
 #Creating solver object
 solver = NewtonRaphson(truss)
-solver.solve(num_increments=3)
+solver.solve(num_increments=35000)
 
 Node.display_nodes()
