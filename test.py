@@ -29,14 +29,17 @@ mat1 = Material(name='mat1', E=50000, sig_poly=sig_poly, yp=yp)
 
 Material.display_material_data()
 
+#Definign the structure directory
+str_dir = './horizontal_bar_1elem/'
+
 #Creating nodes from csv
 f = './nodes.csv'
-Node.create_nodes_from_csv(f)
+Node.create_nodes_from_csv(str_dir+f)
 Node.display_nodes()
 
 #Creating elements from csv
 f = './elements.csv'
-Element.create_elements_from_csv(f)
+Element.create_elements_from_csv(str_dir+f)
 Element.set_material(mat1)
 Element.display_elements()
 
@@ -46,11 +49,11 @@ truss.assemble_full_stiffness()
 
 #Apply bcs from csv
 f = './bcs.csv'
-truss.apply_bcs_from_csv(f)
+truss.apply_bcs_from_csv(str_dir+f)
 
 #Apply loads from csv
 f = './loads.csv'
-truss.apply_loads_from_csv(f)
+truss.apply_loads_from_csv(str_dir+f)
 
 #Elastic without NewtonRapshon
 #truss.assemble_reduced_stiffness()

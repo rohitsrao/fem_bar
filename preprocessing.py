@@ -468,7 +468,6 @@ class Element():
         self.int_force_axial[2, 0] = temp
         self.int_force = np.matmul(self.T, self.int_force_axial)
 
-
     def compute_strain(self):
         '''
         This method computes the element strain at all the gauss points
@@ -667,33 +666,26 @@ class Element():
 
         #Creating an empty list to store the Et values and which will be returned
         Et_val_list = []
-
+         
         #Looping through the list containing strain values at the gauss points
         for i in range(self.eps_gp_arr.shape[0]):
-
+            
             #Extracting strain value at a single gauss point
             strain_at_gp = self.eps_gp_arr[i]
-
+            
             #If material has yielded at gauss point set the tangent modulus to updated value
             #and also update the yield flag to True
             if strain_at_gp >= self.mat.yp:
                 Et_val_list.append(self.mat.Et(strain_at_gp))
                 self.yield_flags[i] = True
-                print('material has yielded')
-                print('Et_val_list')
-                print(Et_val_list)
             #else set tangent modulus to be Young's Modulus
             #and the Yield Flag to be False
             else:
                 Et_val_list.append(self.mat.E)
                 self.yield_flags[i] = False
-                print('material has not yielded')
-                print('Et_val_list')
-                print(Et_val_list)
                 
         #Updating the list of Et values at the gauss points
         self.Et_values_at_gp = Et_val_list
-
 
 #Class for Load
 class Load():
@@ -1006,6 +998,9 @@ class Truss():
                 row = e.dof_ids[i]-1
                 self.global_int_force[row, 0] += e.int_force[i, 0]
 
+        #Updating the loads at the nodes
+        self.apply_residue_to_nodes(self.global_int_force)
+
         #Defining a list to store the internal forces only at active dofs
         reduced_int_force_list = []
 
@@ -1173,6 +1168,8 @@ class Truss():
 
         #Compute the dimension of the reduced stiffness matrix
         self.reduced_dimension = self.global_dimension - len(self.bc_dof_ids)
+
+        ''''''
 
     def generate_reduced_force_vec(self):
         '''

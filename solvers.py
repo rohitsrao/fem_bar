@@ -99,25 +99,17 @@ class NewtonRaphson():
                 #Looping through elements
                 for e in self.truss.edict.values():
 
-                    print('Element ID: {}'.format(e.id))
-
                     #Compute the degree of freedom vector
                     e.compute_dof_vec()
 
                     #Transform global displacements into axial displacements
                     e.compute_axial_displacements()
-                    print('axial displacement')
-                    print(e.u_axial)
 
                     #Compute the strain in the element
                     e.compute_strain()
-                    print('strain')
-                    print(e.eps_gp_arr)
 
                     #Compute stresses at gauss points
                     e.compute_stress()
-                    print('stress')
-                    print(e.sig_gp_arr)
 
                     #Compute internal force in element
                     e.compute_internal_force()
@@ -127,22 +119,16 @@ class NewtonRaphson():
 
                 #Set the newton raphson int_force variable
                 int_force = self.truss.reduced_int_force
-                print('truss reduced internal force')
-                print(int_force)
 
                 #Update residue vector
                 res_vec = ext_force - int_force
-                print('residue vector')
-                print(res_vec)
 
                 #Compute norm of residue vector
                 res_norm = np.linalg.norm(res_vec)
 
                 #Print Iteration number and residue
                 print('Iteration: {}    res_norm: {:.4E}'.format(i, res_norm))
-                input()
 
-            Node.display_nodes()
             #Print blank line at end of increment
             print()
 
