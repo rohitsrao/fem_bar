@@ -632,6 +632,10 @@ class Element():
         self.k_local_2d[2, 0] = self.k_local_1d[1, 0]
         self.k_local_2d[2, 2] = self.k_local_1d[1, 1]
 
+        #Transformation to global
+        self.k_global_2d = np.matmul(self.T, np.matmul(self.k_local_2d, self.T.T))
+        print(self.k_global_2d)
+
     def set_transformation_matrix(self):
         '''
         This method is called from the initializer for Element class and 
@@ -972,7 +976,8 @@ class Truss():
                     gi -= 1
                     gj -= 1
 
-                    self.K[gi, gj] += e.k_local_2d[i, j]
+                    #self.K[gi, gj] += e.k_local_2d[i, j]
+                    self.K[gi, gj] += e.k_global_2d[i, j]
 
     def assemble_internal_force(self):
         '''
@@ -1061,7 +1066,7 @@ class Truss():
                         gj -= 1
 
                         #Adding to reduced stiffness matrix
-                        self.Kr[gi, gj] += e.k_local_2d[i, j]
+                        self.Kr[gi, gj] += e.k_global_2d[i, j]
     
     def apply_bcs_from_csv(self, f):
         '''
@@ -1225,9 +1230,11 @@ class Truss():
         This method solves the reduced stiffness matrix and reduced force vector
         '''
 
+        print('reduced stiffness matrix')
+        print(self.Kr)
+
         #Solving the system to compute the displacement increment
-        #self.du = np.linalg.solve(self.Kr, self.Fr)
-        self.du = np.matmul(np.linalg.pinv(self.Kr), self.Fr)
+        self.du = np.linalg.solve(self.Kr, self.Fr)
 
         #Updating the reduced displacement vector
         self.u += self.du

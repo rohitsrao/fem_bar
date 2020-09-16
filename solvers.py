@@ -53,7 +53,7 @@ class NewtonRaphson():
         #Applying loads until t=1
         #this is checked by subtracting current value of t from 1 and seeing if it is
         #greater than 1e-12. This needs to be done as delta_t can be fractions
-        while (1-t)>1e-12 and _100IterationConvergedFlag==False:
+        while (1-t)>1e-12:
 
             #Increment the increment counter
             n += 1
@@ -69,9 +69,13 @@ class NewtonRaphson():
             #Calculating the external force vector to be applied
             #for this increment
             ext_force = t*self.truss.Fr_total
+            print('ext_force')
+            print(ext_force)
 
             #Initialise residue vector for this incremenet
             res_vec = ext_force-int_force
+            print('res_vec')
+            print(res_vec)
 
             #Compute the norm of the residue vector
             res_norm = np.linalg.norm(res_vec)
@@ -106,20 +110,33 @@ class NewtonRaphson():
                 #Looping through elements
                 for e in self.truss.edict.values():
 
+                    print('element id: {}'.format(e.id))
+                    print('transformation matrix:')
+                    print(e.T)
                     #Compute the degree of freedom vector
                     e.compute_dof_vec()
+                    print('dof_vec')
+                    print(e.dof_vec)
 
                     #Transform global displacements into axial displacements
                     e.compute_axial_displacements()
+                    print('axial displacement')
+                    print(e.u_axial)
 
                     #Compute the strain in the element
                     e.compute_strain()
-
+                    print('strain')
+                    print(e.eps_gp_arr)
+                    
                     #Compute stresses at gauss points
                     e.compute_stress()
+                    print('stress')
+                    print(e.sig_gp_arr)
 
                     #Compute internal force in element
                     e.compute_internal_force()
+                    print('int_force')
+                    print(e.int_force)
 
                 #Assemble the internal force vector for the truss
                 self.truss.assemble_internal_force()
@@ -137,7 +154,7 @@ class NewtonRaphson():
                 print('Iteration: {}    res_norm: {:.4E}'.format(i, res_norm))
 
                 #Breaking from the loop if 100 iterations have passed and no convergence was attained
-                if i == 100:
+                if i == 10:
                     _100IterationConvergedFlag = True
                     print('Convergence not attained even after 100 iterations. Exiting Solver')
                     break
@@ -154,6 +171,10 @@ class NewtonRaphson():
 
             #Print blank line at end of increment
             print()
+
+            #Checking if 100 iterations over
+            if _100IterationConvergedFlag==True:
+                break
 
         #Converting data_dump list to pandas dataframe
         #df = pd.DataFrame(data_dump, columns=['u1', 'u2', 'f', 'k11', 'delta_u', 'f_by_delta_u'])

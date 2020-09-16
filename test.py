@@ -30,7 +30,8 @@ mat1 = Material(name='mat1', E=50000, sig_poly=sig_poly, yp=yp)
 Material.display_material_data()
 
 #Definign the structure directory
-str_dir = './horizontal_bar_1elem/'
+#str_dir = './horizontal_bar_1elem/'
+str_dir = './triangle/'
 
 #Creating nodes from csv
 f = './nodes.csv'
@@ -65,6 +66,6 @@ truss.apply_loads_from_csv(str_dir+f)
 
 #Creating solver object
 solver = NewtonRaphson(truss)
-solver.solve(num_increments=35000)
+solver.solve(num_increments=10)
 
 Node.display_nodes()
