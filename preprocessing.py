@@ -257,13 +257,13 @@ class Element():
 
             #Creating a row of the output table
             row = []
-            row.append(str(e.id))
+            row.append('{}'.format(e.id))
             row.append(e.mat.name)
-            row.append(str(e.n[0].id))
-            row.append(str(e.n[1].id))
-            row.append(str(e.A))
-            row.append(str(e.L))
-            row.append(str(e.theta_deg))
+            row.append('{}'.format(e.n[0].id))
+            row.append('{}'.format(e.n[1].id))
+            row.append('{:.2f}'.format(e.A))
+            row.append('{:.2f}'.format(e.L))
+            row.append('{:.2f}'.format(e.theta_deg))
             print(''.join(cell.ljust(cell_width) for cell in row))
         
         #Final print to create space
