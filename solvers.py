@@ -46,12 +46,14 @@ class NewtonRaphson():
         #List to store u1, u2, f2, k11
         data_dump = []
 
+        #Defining a flag to keep track if no convergence was attained after 100 iterations
+        _100IterationConvergedFlag = False
 
         #INCREMENT LOOP
         #Applying loads until t=1
         #this is checked by subtracting current value of t from 1 and seeing if it is
         #greater than 1e-12. This needs to be done as delta_t can be fractions
-        while (1-t)>1e-12:
+        while (1-t)>1e-12 and _100IterationConvergedFlag==False:
 
             #Increment the increment counter
             n += 1
@@ -134,22 +136,28 @@ class NewtonRaphson():
                 #Print Iteration number and residue
                 print('Iteration: {}    res_norm: {:.4E}'.format(i, res_norm))
 
+                #Breaking from the loop if 100 iterations have passed and no convergence was attained
+                if i == 100:
+                    _100IterationConvergedFlag = True
+                    print('Convergence not attained even after 100 iterations. Exiting Solver')
+                    break
+
             #Extract the stiffness information
-            tmp_u1 = self.truss.edict[1].dof_vec[0, 0]
-            tmp_u2 = self.truss.edict[1].dof_vec[2, 0]
-            tmp_f = self.truss.edict[1].int_force[2, 0]
-            tmp_k11 = self.truss.edict[1].k_local_2d[0, 0]
-            tmp_delu = tmp_u2-tmp_u1
-            tmp_fbydelu = tmp_f/tmp_delu
-            row = [tmp_u1, tmp_u2, tmp_f, tmp_k11, tmp_delu, tmp_fbydelu]
-            data_dump.append(row)
+            #tmp_u1 = self.truss.edict[1].dof_vec[0, 0]
+            #tmp_u2 = self.truss.edict[1].dof_vec[2, 0]
+            #tmp_f = self.truss.edict[1].int_force[2, 0]
+            #tmp_k11 = self.truss.edict[1].k_local_2d[0, 0]
+            #tmp_delu = tmp_u2-tmp_u1
+            #tmp_fbydelu = tmp_f/tmp_delu
+            #row = [tmp_u1, tmp_u2, tmp_f, tmp_k11, tmp_delu, tmp_fbydelu]
+            #data_dump.append(row)
 
             #Print blank line at end of increment
             print()
 
         #Converting data_dump list to pandas dataframe
-        df = pd.DataFrame(data_dump, columns=['u1', 'u2', 'f', 'k11', 'delta_u', 'f_by_delta_u'])
+        #df = pd.DataFrame(data_dump, columns=['u1', 'u2', 'f', 'k11', 'delta_u', 'f_by_delta_u'])
 
         #Saving dataframe to csv
-        outfile = './data_dump_0.1N.csv'
-        df.to_csv(outfile, index=False)
+        #outfile = './data_dump_0.1N.csv'
+        #df.to_csv(outfile, index=False)
