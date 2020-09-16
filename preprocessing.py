@@ -1226,7 +1226,8 @@ class Truss():
         '''
 
         #Solving the system to compute the displacement increment
-        self.du = np.linalg.solve(self.Kr, self.Fr)
+        #self.du = np.linalg.solve(self.Kr, self.Fr)
+        self.du = np.matmul(np.linalg.pinv(self.Kr), self.Fr)
 
         #Updating the reduced displacement vector
         self.u += self.du
