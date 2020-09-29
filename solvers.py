@@ -69,13 +69,9 @@ class NewtonRaphson():
             #Calculating the external force vector to be applied
             #for this increment
             ext_force = t*self.truss.Fr_total
-            print('ext_force')
-            print(ext_force)
 
             #Initialise residue vector for this incremenet
             res_vec = ext_force-int_force
-            print('res_vec')
-            print(res_vec)
 
             #Compute the norm of the residue vector
             res_norm = np.linalg.norm(res_vec)
@@ -110,33 +106,20 @@ class NewtonRaphson():
                 #Looping through elements
                 for e in self.truss.edict.values():
 
-                    print('element id: {}'.format(e.id))
-                    print('transformation matrix:')
-                    print(e.T)
                     #Compute the degree of freedom vector
                     e.compute_dof_vec()
-                    print('dof_vec')
-                    print(e.dof_vec)
 
                     #Transform global displacements into axial displacements
                     e.compute_axial_displacements()
-                    print('axial displacement')
-                    print(e.u_axial)
 
                     #Compute the strain in the element
                     e.compute_strain()
-                    print('strain')
-                    print(e.eps_gp_arr)
                     
                     #Compute stresses at gauss points
                     e.compute_stress()
-                    print('stress')
-                    print(e.sig_gp_arr)
 
                     #Compute internal force in element
                     e.compute_internal_force()
-                    print('int_force')
-                    print(e.int_force)
 
                 #Assemble the internal force vector for the truss
                 self.truss.assemble_internal_force()

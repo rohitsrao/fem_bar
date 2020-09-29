@@ -634,7 +634,6 @@ class Element():
 
         #Transformation to global
         self.k_global_2d = np.matmul(self.T, np.matmul(self.k_local_2d, self.T.T))
-        print(self.k_global_2d)
 
     def set_transformation_matrix(self):
         '''
@@ -1101,6 +1100,19 @@ class Truss():
         #Compute active dofs
         self.compute_active_dofs()
 
+    def apply_global_int_force_to_nodes(self, f):
+        '''
+        This function is to apply the assembled global internal
+        force vector to each node. Basically to update the load at each node
+        '''
+        
+        #Looping through the nodes
+        for n in self.ndict.values():
+            
+            #Looping through the dofs
+            
+
+
     def apply_loads_from_csv(self, f):
         '''
         This method applies loads at nodes from csv
@@ -1229,9 +1241,6 @@ class Truss():
         '''
         This method solves the reduced stiffness matrix and reduced force vector
         '''
-
-        print('reduced stiffness matrix')
-        print(self.Kr)
 
         #Solving the system to compute the displacement increment
         self.du = np.linalg.solve(self.Kr, self.Fr)
