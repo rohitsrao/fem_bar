@@ -46,29 +46,36 @@ class DOF():
     #Defining a list to keep track of all created dof_ids
     dof_ids = []
 
+    #Defining a dictionary to keep track of created DOF objects
+    created_dofs = {}
+
     def __init__(self, symbol, value=None):
         '''
         Initializer for the DOF class
-
+        
         Inputs 
         symbol - String - ux or uy
         value - Float value - By default set to None
         '''
-
+        
         #Increment counter
         DOF.count += 1
-
+        
         #Setting DOF id
         self.id = DOF.count
-
+        
         #Setting the symbol
         self.symbol = symbol
-
+        
         #Setting the value
         self.value = value
-
+        
         #Add the dof_id to the list
         DOF.dof_ids.append(self.id)
+        
+        #Add the created DOF object to the dictionary
+        #indexed by id
+        DOF.created_dofs[self.id] = self
 
 #Class for Bar Element
 class Element():
@@ -558,13 +565,13 @@ class Element():
 
         #Creating a list to store the indices
         global_indices_list = []
-
+        
         #Permuting the dof ids to get the global indices
         for i in range(Element.num_dofs):
             for j in range(Element.num_dofs):
                 tup = (self.dof_ids[i], self.dof_ids[j])
                 global_indices_list.append(tup)
-
+        
         #Converting list into array
         self.global_indices = np.empty(len(global_indices_list), dtype=object)
         self.global_indices[:] = global_indices_list
@@ -697,10 +704,14 @@ class Load():
    #Keeps count of number of loads created
    #counter value serves as Load ID
    count = 0
+
+   #Defining a dictionary to keep track of created Load objects
+   created_loads = {}
+
    def __init__(self, symbol, value=0.0):
        '''
        Initializer for the load class
-
+        
        Inputs
        symbol - String - FX or FY
        value - Float value - Default is None
@@ -708,15 +719,18 @@ class Load():
        
        #Increment counter
        Load.count += 1
-
+        
        #Set load id
        self.id = Load.count
-
+        
        #Set symbol
        self.symbol = symbol
-
+        
        #Set value
        self.value = float(value)
+        
+       #Add created load to dictionary indexed by load id
+       Load.created_loads[self.id] = self
 
 #Class for Material
 class Material():
@@ -958,24 +972,23 @@ class Truss():
         #Define a matrix of zeros
         k_shape = (self.global_dimension, self.global_dimension)
         self.K = np.zeros(shape=k_shape)
-
+        
         #Loop through each element
         for e in self.edict.values():
 
             #Looping through the local stiffness matrix
             for i in range(e.num_dofs):
                 for j in range(e.num_dofs):
-
+                    
                     #Extracting the global indices
                     gi = e.global_indices[i, j][0]
                     gj = e.global_indices[i, j][1]
-
+                    
                     #Subtracting 1 from global indices as 
                     #indexings starts from 0 
                     gi -= 1
                     gj -= 1
-
-                    #self.K[gi, gj] += e.k_local_2d[i, j]
+                    
                     self.K[gi, gj] += e.k_global_2d[i, j]
 
     def assemble_internal_force(self):
@@ -1003,7 +1016,7 @@ class Truss():
                 self.global_int_force[row, 0] += e.int_force[i, 0]
 
         #Updating the loads at the nodes
-        self.apply_residue_to_nodes(self.global_int_force)
+        self.apply_global_int_force_to_nodes(self.global_int_force)
 
         #Defining a list to store the internal forces only at active dofs
         reduced_int_force_list = []
@@ -1105,13 +1118,12 @@ class Truss():
         This function is to apply the assembled global internal
         force vector to each node. Basically to update the load at each node
         '''
-        
-        #Looping through the nodes
-        for n in self.ndict.values():
-            
-            #Looping through the dofs
-            
 
+        #Looping through f - the index will correspond to dof id
+        for i in range(f.shape[0]):
+            
+            #Set value in DOF to be value in corresponding row
+            Load.created_loads[i+1].value = f[i, 0]
 
     def apply_loads_from_csv(self, f):
         '''
@@ -1157,16 +1169,16 @@ class Truss():
 
         #Looping through the nodes
         for n in self.ndict.values():
-
+            
             #Looping through the dofs
             for d in n.dofs.values():
-
+             
                 #If the dof is an active dof then update load value
                 #from residue vector. 
                 #The row for the residue vector will be the index in
                 #self.active_dofs where the dof_id appears.
                 if d.id in self.active_dofs:
-
+                 
                     row = self.active_dofs.index(d.id)
                     n.apply_load_by_dof_id(d.id, res_vec[row, 0])
 
