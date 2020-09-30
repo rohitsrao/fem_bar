@@ -686,6 +686,7 @@ class Element():
             #If material has yielded at gauss point set the tangent modulus to updated value
             #and also update the yield flag to True
             if strain_at_gp >= self.mat.yp:
+                print('material has yielded')
                 Et_val_list.append(self.mat.Et(strain_at_gp))
                 self.yield_flags[i] = True
             #else set tangent modulus to be Young's Modulus
@@ -1000,13 +1001,13 @@ class Truss():
         #Initialising a global internal force vector to be zero
         global_int_force_shape = (self.global_dimension, 1)
         self.global_int_force = np.zeros(shape=global_int_force_shape)
-
+        
         #Looping through each element
         for e in self.edict.values():
-
+            
             #Looping through the dof_ids
             for i in range(len(e.dof_ids)):
-
+                
                 #Adding the corresponding component of the internal force vector
                 #to the proper position in the global internal force vector
                 #the dof_id becomes the row in the global internal force vector
@@ -1017,28 +1018,28 @@ class Truss():
 
         #Updating the loads at the nodes
         self.apply_global_int_force_to_nodes(self.global_int_force)
-
+        
         #Defining a list to store the internal forces only at active dofs
         reduced_int_force_list = []
-
+        
         #Looping through the nodes
         for n in self.ndict.values():
-
+        
             #Looping through the dofs in the node
             for dof in n.dofs.values():
-
+                
                 #If dof is an active dof
                 if dof.id in self.active_dofs:
-
+                    
                     #Append force to the list
                     #The force to append is indexed by the dof_id in self.global_int_force
                     #subtracting 1 from dof_id because array indexed from 0 but dof id indexed from 1
                     index = dof.id-1
                     reduced_int_force_list.append(self.global_int_force[index, 0])
-
+        
         #Convert the list to an array
         self.reduced_int_force = np.array(reduced_int_force_list)
-
+        
         #Reshaping
         reduced_int_force_shape = (self.reduced_dimension, 1)
         self.reduced_int_force = np.reshape(self.reduced_int_force, newshape=reduced_int_force_shape)

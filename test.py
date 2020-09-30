@@ -30,8 +30,8 @@ mat1 = Material(name='mat1', E=50000, sig_poly=sig_poly, yp=yp)
 Material.display_material_data()
 
 #Definign the structure directory
-#str_dir = './horizontal_bar_1elem/'
-str_dir = './triangle/'
+str_dir = './horizontal_bar_1elem/'
+#str_dir = './triangle/'
 
 #Creating nodes from csv
 f = './nodes.csv'
