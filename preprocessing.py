@@ -469,11 +469,15 @@ class Element():
         
         ##Transforming the axial component to get the internal force in truss system
         #self.int_force = np.matmul(self.T, self.int_force_axial)
-        temp = self.sig_gp_arr[0]*self.A
-        self.int_force_axial = np.zeros(shape=(Element.num_dofs, 1))
-        self.int_force_axial[0, 0] = -temp
-        self.int_force_axial[2, 0] = temp
-        self.int_force = np.matmul(self.T, self.int_force_axial)
+        #temp = self.sig_gp_arr[0]*self.A
+        #self.int_force_axial = np.zeros(shape=(Element.num_dofs, 1))
+        #self.int_force_axial[0, 0] = -temp
+        #self.int_force_axial[2, 0] = temp
+        #self.int_force = np.matmul(self.T, self.int_force_axial)
+
+        self.axial_dof_vec = np.matmul(self.T_inv, self.dof_vec)
+        self.int_force = np.matmul(self.k_local_2d, self.axial_dof_vec)
+        print(self.int_force)
 
     def compute_strain(self):
         '''
@@ -1052,7 +1056,7 @@ class Truss():
 
         #Initializing the reduced stiffness matrix
         reduced_shape = (self.reduced_dimension, self.reduced_dimension)
-        self.Kr = np.zeros(shape=(reduced_shape))
+        self.Kr = np.zeros(shape=reduced_shape)
 
         #Looping through each element
         for e in self.edict.values():
