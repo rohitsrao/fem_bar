@@ -685,7 +685,6 @@ class Element():
             #If material has yielded at gauss point set the tangent modulus to updated value
             #and also update the yield flag to True
             if strain_at_gp >= self.mat.yp:
-                print('material has yielded')
                 Et_val_list.append(self.mat.Et(strain_at_gp))
                 self.yield_flags[i] = True
             #else set tangent modulus to be Young's Modulus
