@@ -106,47 +106,23 @@ class NewtonRaphson():
                 #Looping through elements
                 for e in self.truss.edict.values():
 
-                    #print('Element: {}'.format(e.id))
-                    #print('------------------------')
-                    
                     #Compute the degree of freedom vector
                     e.compute_dof_vec()
-                    #print('dof_vec')
-                    #print(e.dof_vec)
-                    #print()
                     
                     #Transform global displacements into axial displacements
                     e.compute_axial_displacements()
-                    #print('u_axial')
-                    #print(e.u_axial)
-                    #print()
                    
                     #Compute the strain in the element
                     e.compute_strain()
-                    #print('strain')
-                    #print(e.eps_gp_arr)
-                    #print()
                     
                     #Compute stresses at gauss points
                     e.compute_stress()
-                    #print('stress')
-                    #print(e.sig_gp_arr)
-                    #print()
                     
                     #Compute internal force in element
                     e.compute_internal_force()
-                    #print('int_force')
-                    #print(e.int_force_global)
-                    #print()
                 
                 #Assemble the internal force vector for the truss
                 self.truss.assemble_internal_force()
-                #print('Global internal force vector for the truss')
-                #print(self.truss.global_int_force)
-                #print()
-                #print('Reduced global internal force vector for the truss')
-                #print(self.truss.reduced_int_force)
-                #print()
                 
                 #Set the newton raphson int_force variable
                 int_force = self.truss.reduced_int_force
