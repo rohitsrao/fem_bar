@@ -472,8 +472,6 @@ class Element():
         self.int_force_axial[2, 0] = temp[1, 0]
 
         #Transforming this to the global coordinate system from axial coordinate system
-        print(self.T.shape)
-        print(self.int_force_axial.shape)
         self.int_force_global = np.matmul(self.T, self.int_force_axial)
 
     def compute_strain(self):
