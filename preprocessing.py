@@ -431,6 +431,9 @@ class Element():
         dof_vec_shape = (Element.num_dofs, 1)
         self.dof_vec = np.reshape(self.dof_vec, newshape=dof_vec_shape)
 
+        #Transforming the global element dof vec into the axial dof vec
+        self.axial_dof_vec = np.matmul(self.T_inv, self.dof_vec)
+
     def compute_geometry(self):
         '''
         Method to compute the length and angle of the element
@@ -458,26 +461,12 @@ class Element():
         '''
         This method computes the internal force vector for the element. 
         '''
-        ##Computing the internal force using gauss integration for the axial direction
-        #temp = self.gauss_integrator(self.int_force_integrand) 
-        
-        ##This is a (2, 1) vector of only axial forces f1 and f2
-        ##We need to add 0s for the vertical component of forces
-        #self.int_force_axial = np.zeros(shape=(Element.num_dofs, 1))
-        #self.int_force_axial[0, 0] = temp[0, 0]
-        #self.int_force_axial[2, 0] = temp[1, 0]
-        
-        ##Transforming the axial component to get the internal force in truss system
-        #self.int_force = np.matmul(self.T, self.int_force_axial)
-        #temp = self.sig_gp_arr[0]*self.A
-        #self.int_force_axial = np.zeros(shape=(Element.num_dofs, 1))
-        #self.int_force_axial[0, 0] = -temp
-        #self.int_force_axial[2, 0] = temp
-        #self.int_force = np.matmul(self.T, self.int_force_axial)
 
-        self.axial_dof_vec = np.matmul(self.T_inv, self.dof_vec)
-        self.int_force = np.matmul(self.k_local_2d, self.axial_dof_vec)
-        print(self.int_force)
+        #Computing the axial internal force
+        self.int_force_axial = np.matmul(self.k_local_2d, self.axial_dof_vec)
+        
+        #Transforming this to the global coordinate system from axial coordinate system
+        self.int_force_global = np.matmul(self.T, self.int_force_axial)
 
     def compute_strain(self):
         '''
@@ -660,7 +649,7 @@ class Element():
 
         #Computing the inverse of the transformation matrix
         self.T_inv = Element.T_inv.subs(Element.phi, self.theta)
-        self.T_inv = np.array(self.T).astype(np.float64)
+        self.T_inv = np.array(self.T_inv).astype(np.float64)
 
     def transform_k_local_global(self):
         '''
@@ -1018,8 +1007,8 @@ class Truss():
                 #we need to subtract 1 as the dof ids are indexed from 1 but the arrays
                 #are indexed from 0
                 row = e.dof_ids[i]-1
-                self.global_int_force[row, 0] += e.int_force[i, 0]
-
+                self.global_int_force[row, 0] += e.int_force_global[i, 0]
+        
         #Updating the loads at the nodes
         self.apply_global_int_force_to_nodes(self.global_int_force)
         

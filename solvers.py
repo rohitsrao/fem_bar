@@ -105,43 +105,67 @@ class NewtonRaphson():
                 
                 #Looping through elements
                 for e in self.truss.edict.values():
+
+                    #print('Element: {}'.format(e.id))
+                    #print('------------------------')
                     
                     #Compute the degree of freedom vector
                     e.compute_dof_vec()
+                    #print('dof_vec')
+                    #print(e.dof_vec)
+                    #print()
                     
                     #Transform global displacements into axial displacements
                     e.compute_axial_displacements()
-                    
+                    #print('u_axial')
+                    #print(e.u_axial)
+                    #print()
+                   
                     #Compute the strain in the element
                     e.compute_strain()
+                    #print('strain')
+                    #print(e.eps_gp_arr)
+                    #print()
                     
                     #Compute stresses at gauss points
                     e.compute_stress()
+                    #print('stress')
+                    #print(e.sig_gp_arr)
+                    #print()
                     
                     #Compute internal force in element
                     e.compute_internal_force()
-
+                    #print('int_force')
+                    #print(e.int_force_global)
+                    #print()
+                
                 #Assemble the internal force vector for the truss
                 self.truss.assemble_internal_force()
+                #print('Global internal force vector for the truss')
+                #print(self.truss.global_int_force)
+                #print()
+                #print('Reduced global internal force vector for the truss')
+                #print(self.truss.reduced_int_force)
+                #print()
                 
                 #Set the newton raphson int_force variable
                 int_force = self.truss.reduced_int_force
                 
                 #Update residue vector
                 res_vec = ext_force - int_force
-
+                
                 #Compute norm of residue vector
                 res_norm = np.linalg.norm(res_vec)
-
+                
                 #Print Iteration number and residue
                 print('Iteration: {}    res_norm: {:.4E}'.format(i, res_norm))
-
+                
                 #Breaking from the loop if 100 iterations have passed and no convergence was attained
-                if i == 10:
+                if i == 100:
                     _100IterationConvergedFlag = True
                     print('Convergence not attained even after 100 iterations. Exiting Solver')
                     break
-
+             
             #Extract the stiffness information
             #tmp_u1 = self.truss.edict[1].dof_vec[0, 0]
             #tmp_u2 = self.truss.edict[1].dof_vec[2, 0]
