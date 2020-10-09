@@ -431,9 +431,6 @@ class Element():
         dof_vec_shape = (Element.num_dofs, 1)
         self.dof_vec = np.reshape(self.dof_vec, newshape=dof_vec_shape)
 
-        #Transforming the global element dof vec into the axial dof vec
-        self.axial_dof_vec = np.matmul(self.T_inv, self.dof_vec)
-
     def compute_geometry(self):
         '''
         Method to compute the length and angle of the element
@@ -462,10 +459,21 @@ class Element():
         This method computes the internal force vector for the element. 
         '''
 
-        #Computing the axial internal force
-        self.int_force_axial = np.matmul(self.k_local_2d, self.axial_dof_vec)
+        #Computing the axial internal force by substituting in the symbolic internal force term
+        temp = self.gauss_integrator(Element.int_force_integrand)
         
+        #Convert sympy array to numpy
+        temp = np.asarray(temp).astype(np.float64)
+
+        #The internal force vector returned by the gauss integrator is 2x1 which only contains the axial components
+        #Zeros are added to convert it from 1d to 2d
+        self.int_force_axial = np.zeros(shape=(Element.num_dofs, 1))
+        self.int_force_axial[0, 0] = temp[0, 0]
+        self.int_force_axial[2, 0] = temp[1, 0]
+
         #Transforming this to the global coordinate system from axial coordinate system
+        print(self.T.shape)
+        print(self.int_force_axial.shape)
         self.int_force_global = np.matmul(self.T, self.int_force_axial)
 
     def compute_strain(self):
