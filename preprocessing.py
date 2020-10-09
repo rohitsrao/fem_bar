@@ -889,8 +889,8 @@ class Node():
     def display_nodes(cls):
 
         #Setting column width and padding
-        col_width = 7
-        col_pad = 3
+        col_width = 12
+        col_pad = 4
 
         #Computing total cell length - width + padding
         cell_width = col_width + col_pad
@@ -918,15 +918,15 @@ class Node():
             if n.dofs['UX'].value == None:
                 row.append(str(n.dofs['UX'].value))
             else:
-                row.append('{:.4f}'.format(n.dofs['UX'].value))
+                row.append('{:.4E}'.format(n.dofs['UX'].value))
 
             if n.dofs['UY'].value == None:
                 row.append(str(n.dofs['UY'].value))
             else:
-                row.append('{:.4f}'.format(n.dofs['UY'].value))
+                row.append('{:.4E}'.format(n.dofs['UY'].value))
 
-            row.append('{:.2f}'.format(n.loads['FX'].value))
-            row.append('{:.2f}'.format(n.loads['FY'].value))
+            row.append('{:.2E}'.format(n.loads['FX'].value))
+            row.append('{:.2E}'.format(n.loads['FY'].value))
 
             print(''.join(cell.ljust(cell_width) for cell in row))
         
