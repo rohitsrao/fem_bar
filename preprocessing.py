@@ -765,6 +765,11 @@ class Material():
                 #Computing tangent modulus
                 self.Et = self.sig_poly.deriv()
 
+            #Storing yield stress
+            if 'sig_y' in kwargs.keys():
+                
+                self.sig_y = kwargs['sig_y']
+
             #Storing the yield point
             if 'yp' in kwargs.keys():
 
